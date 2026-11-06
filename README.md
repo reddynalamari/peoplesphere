@@ -4,7 +4,8 @@ A 100% Salesforce-native HR platform: Apex, Lightning Web Components, custom obj
 It covers the full employee journey, from hiring to onboarding, learning, performance, attendance, service desk, exit and analytics.
 
 - **Org:** `orgfarm-f91af49989-dev-ed` (CLI alias `peoplesphere`)
-- **Public demo (no login):** https://orgfarm-f91af49989-dev-ed.develop.my.site.com/peoplesphere/s/
+- **Public employee demo (no login):** https://orgfarm-f91af49989-dev-ed.develop.my.site.com/peoplesphere/s/
+- **Public HR Admin demo (password):** https://orgfarm-f91af49989-dev-ed.develop.my.site.com/peoplesphere/s/hr-admin
 - **Internal app:** App Launcher → **PeopleSphere**
 
 ---
@@ -144,24 +145,38 @@ sf community publish --name PeopleSphere --target-org peoplesphere
 
 ## HR Admin Console
 
-`psHrConsole` puts every HR feature on one page: the dashboard, any employee's 360 view (with pay), onboarding management and document verification, organization-wide approvals and reviews, the service desk (`psServiceDesk`), the recruitment board (`psRecruitment`, where Hire creates the employee and starts onboarding), the full HR Assistant, the org chart and the data explorer (`psDataExplorer`, read-only, all 35 PeopleSphere objects).
+`psHrConsole` puts every HR feature on one page: the dashboard, any employee's 360 view (with pay), onboarding management and document verification, organization-wide approvals and reviews, the service desk (`psServiceDesk`), the recruitment board (`psRecruitment`, where Hire creates the employee and starts onboarding), the full HR Assistant, the org chart and **All records** (`psDataExplorer`): create, view, edit and delete any record of all 35 PeopleSphere objects.
+
+**Record editor** (`PS_RecordEditorController` + `psRecordForm`, `psRecordView`, `psLookupField`, `psRecordApi`):
+- Forms are generated from the live schema: text, numbers, dates, date-times, checkboxes, picklists, long text and lookup search (including users).
+- Required fields are enforced. Calculated, auto-number and system fields are read-only.
+- The record view shows every field, plus related lists. Each list has a **+** to create a child record that is already linked to the parent, and you can click through to any linked record (with Back).
+- Saves go through the normal triggers, so new employees get IDs, onboarding and training, approvals deduct balances, and so on.
+- On the public HR link, every editor call goes through `PS_GuestHrGateway` and needs the password session token.
+- Setup-level changes (users, permissions, new fields or objects) are not available from any public page, by Salesforce design. Use a real Salesforce login for those.
 
 - **Inside Salesforce:** App Launcher → PeopleSphere → **HR Admin Console**. Service Desk, Recruitment Board and Data Explorer also have their own tabs. Visible to the Admin and HR permission sets.
-- **Public link (optional, not live yet):** `/peoplesphere/s/hr-admin`, served by `PS_GuestHrGateway`. Guests act with HR rights over the fictional data. The page files are ready in `experiences/PeopleSphere1/routes|views/hrAdmin.json`. To turn it on:
-  1. Add `PS_GuestHrGateway` to the `PeopleSphere_Guest_Demo` permission set (one more `<classAccesses>` block).
-  2. Deploy the permission set and the `experiences` folder:
+- **Public link (password-protected):** https://orgfarm-f91af49989-dev-ed.develop.my.site.com/peoplesphere/s/hr-admin
+  - The page asks for the HR password before showing anything.
+  - The password is enforced on the server. `PS_GuestHrGateway.unlock(password)` compares SHA-256(password) with `PS_Demo_Setting__mdt.Default.HR_Password_Hash__c` and returns a token that is valid for 8 hours. The token is signed with HMAC-SHA256, using a key derived from the stored hash and the org id.
+  - Every other gateway method rejects calls without a valid token, so calling the Apex directly doesn't bypass the password.
+  - The browser keeps the token in `sessionStorage` for the tab (`c/psHrAuth`). The **Lock** button clears it.
+  - Anyone who knows the password can approve, reject, hire, edit tickets and see the (fictional) salaries.
+
+### Changing the HR demo password
+Compute the new hash:
 
 ```bash
-sf project deploy start --target-org peoplesphere -d force-app/main/default/permissionsets/PeopleSphere_Guest_Demo.permissionset-meta.xml -d force-app/main/default/experiences
+python -c "import hashlib;print(hashlib.sha256(b'NEW-PASSWORD').hexdigest())"
 ```
 
-  3. Publish the site:
+Put the result in `force-app/main/default/customMetadata/PS_Demo_Setting.Default.md-meta.xml`, then deploy it:
 
 ```bash
-sf community publish --name PeopleSphere --target-org peoplesphere
+sf project deploy start --target-org peoplesphere -d force-app/main/default/customMetadata/PS_Demo_Setting.Default.md-meta.xml
 ```
 
-  Anyone with that link can approve, reject, hire, edit tickets and see the (fictional) salaries.
+Changing the password also invalidates every existing session, because the signing key changes.
 
 ---
 

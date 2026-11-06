@@ -13,3 +13,4 @@
 .top h2 { font-size: 1rem; font-weight: 700; }
 .tbl { height: 600px; }
 .muted { color: #706e6b; font-size: 0.72rem; margin-top: 0.4rem; }
+.tools { display: flex; gap: 0.5rem; align-items: center; }

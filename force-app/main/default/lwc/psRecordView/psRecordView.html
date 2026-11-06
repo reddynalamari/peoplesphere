@@ -1,0 +1,62 @@
+<template>
+    <section role="dialog" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header head">
+                <div>
+                    <p class="obj">{objectLabel}</p>
+                    <h2 class="slds-text-heading_medium">{recordName}</h2>
+                </div>
+                <div class="actions">
+                    <lightning-button label="Edit" icon-name="utility:edit" onclick={edit}></lightning-button>
+                    <lightning-button label="Delete" icon-name="utility:delete" variant="destructive-text" onclick={askDelete}></lightning-button>
+                </div>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium body">
+                <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+                <template if:true={error}><div class="err" role="alert">{error}</div></template>
+                <template if:true={confirming}>
+                    <div class="confirm">
+                        <span>Delete <strong>{recordName}</strong>? Related child records may be deleted too. This cannot be undone from here.</span>
+                        <lightning-button label="Cancel" onclick={cancelDelete}></lightning-button>
+                        <lightning-button label="Delete" variant="destructive" onclick={confirmDelete}></lightning-button>
+                    </div>
+                </template>
+                <template if:true={data}>
+                    <div class="fields">
+                        <template for:each={fields} for:item="f">
+                            <div key={f.name} class={f.cls}>
+                                <p class="lbl">{f.label}<template if:true={f.calculated}> <span class="calc">auto</span></template></p>
+                                <template if:true={f.linkId}><a class="val" data-id={f.linkId} data-object={f.linkObject} onclick={openLink}>{f.value}</a></template>
+                                <template if:false={f.linkId}><p class="val">{f.display}</p></template>
+                            </div>
+                        </template>
+                    </div>
+                    <p class="audit">Created by {data.createdBy} · last modified by {data.modifiedBy}</p>
+
+                    <h3 class="rel-h">Related</h3>
+                    <div class="related">
+                        <template for:each={related} for:item="r">
+                            <div key={r.key} class="rel">
+                                <div class="rel-top">
+                                    <strong>{r.label}</strong><span class="count">{r.count}</span>
+                                    <lightning-button-icon icon-name="utility:add" size="small" alternative-text="New" title="New" data-object={r.objectApiName} data-field={r.field} onclick={newChild}></lightning-button-icon>
+                                </div>
+                                <ul>
+                                    <template for:each={r.records} for:item="c">
+                                        <li key={c.id}><a data-id={c.id} data-object={r.objectApiName} onclick={openLink}>{c.name}</a></li>
+                                    </template>
+                                </ul>
+                                <template if:true={r.empty}><p class="none">None yet</p></template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+            <footer class="slds-modal__footer">
+                <template if:true={canGoBack}><lightning-button label="Back" icon-name="utility:back" onclick={back} class="slds-float_left"></lightning-button></template>
+                <lightning-button label="Close" onclick={close}></lightning-button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

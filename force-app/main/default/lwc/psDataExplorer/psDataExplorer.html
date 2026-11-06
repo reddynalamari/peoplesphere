@@ -11,13 +11,27 @@
         <div class="main panel">
             <div class="top">
                 <h2>{title}</h2>
-                <lightning-input type="search" label="Search by name" variant="label-hidden" placeholder="Search by name" value={term} onchange={search}></lightning-input>
+                <div class="tools">
+                    <lightning-input type="search" label="Search by name" variant="label-hidden" placeholder="Search by name" value={term} onchange={search}></lightning-input>
+                    <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={refresh}></lightning-button-icon>
+                    <lightning-button label="New" icon-name="utility:add" variant="brand" onclick={newRecord}></lightning-button>
+                </div>
             </div>
             <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
             <div class="tbl">
-                <lightning-datatable key-field="Id" data={rows} columns={columns} hide-checkbox-column></lightning-datatable>
+                <lightning-datatable key-field="Id" data={rows} columns={tableColumns} hide-checkbox-column onrowaction={rowAction}></lightning-datatable>
             </div>
-            <p class="muted">Showing up to 200 most recently changed records · read-only view</p>
+            <p class="muted">Click a row's menu to view, edit or delete · up to 200 most recently changed records · saves run all PeopleSphere automation</p>
         </div>
+
+        <template if:true={view}>
+            <c-ps-record-view object-api-name={view.objectApiName} record-id={view.recordId} can-go-back={canGoBack}
+                              onedit={editFromView} ondeleted={deleted} onclose={closeView} onnavigate={navigate}
+                              onnewchild={newChild} onback={back}></c-ps-record-view>
+        </template>
+        <template if:true={form}>
+            <c-ps-record-form object-api-name={form.objectApiName} record-id={form.recordId} defaults={form.defaults}
+                              onsaved={saved} onclose={closeForm}></c-ps-record-form>
+        </template>
     </div>
 </template>

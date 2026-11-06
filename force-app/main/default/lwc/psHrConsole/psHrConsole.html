@@ -35,7 +35,7 @@
         <template if:true={unlocked}>
         <div class="intro">
             You are acting as the <strong>HR team</strong> of the fictional company <em>Nimbus Technologies</em>. Approve leave, verify documents,
-            resolve tickets, hire candidates (watch onboarding start automatically), review performance and explore every record.
+            resolve tickets, hire candidates (watch onboarding start automatically), review performance, and create, edit or delete any record in "All records".
             All people and data are fictional. Please do not enter real personal information.
         </div>
 
@@ -81,7 +81,7 @@
             <lightning-tab label="Org chart" icon-name="utility:hierarchy">
                 <c-ps-org-chart></c-ps-org-chart>
             </lightning-tab>
-            <lightning-tab label="Data explorer" icon-name="utility:database">
+            <lightning-tab label="All records (add &amp; edit)" icon-name="utility:database">
                 <c-ps-data-explorer></c-ps-data-explorer>
             </lightning-tab>
         </lightning-tabset>

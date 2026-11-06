@@ -112,6 +112,13 @@ public without sharing class PS_GuestHrGateway {
     @AuraEnabled public static List<Map<String, Object>> getObjects(String token) { guard(token); return PS_DataExplorerController.getObjects(); }
     @AuraEnabled public static Map<String, Object> getRecords(String objectApiName, String term, String token) { guard(token); return PS_DataExplorerController.getRecords(objectApiName, term); }
 
+    // record editor: create / view / edit / delete any PeopleSphere record
+    @AuraEnabled public static Map<String, Object> describeObject(String objectApiName, String token) { guard(token); return PS_RecordEditorController.describeObject(objectApiName); }
+    @AuraEnabled public static Map<String, Object> getRecord(String objectApiName, Id recordId, String token) { guard(token); return PS_RecordEditorController.getRecord(objectApiName, recordId); }
+    @AuraEnabled public static Id saveRecord(String objectApiName, Id recordId, String valuesJson, String token) { guard(token); return PS_RecordEditorController.saveRecord(objectApiName, recordId, valuesJson); }
+    @AuraEnabled public static void deleteRecord(String objectApiName, Id recordId, String token) { guard(token); PS_RecordEditorController.deleteRecord(objectApiName, recordId); }
+    @AuraEnabled public static List<Map<String, String>> searchLookup(String objectApiName, String term, String token) { guard(token); return PS_RecordEditorController.searchLookup(objectApiName, term); }
+
     // assistant (no intents blocked)
     @AuraEnabled public static PS_AssistantController.Answer ask(String question, String token) { guard(token); return PS_AssistantController.ask(question); }
     @AuraEnabled public static List<String> suggestions(String token) { guard(token); return PS_AssistantController.suggestions(); }

@@ -1,0 +1,48 @@
+<template>
+    <section role="dialog" class="slds-modal slds-fade-in-open slds-modal_medium">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">{title}</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium body">
+                <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+                <template if:true={error}><div class="err" role="alert">{error}</div></template>
+                <div class="grid">
+                    <template for:each={fieldViews} for:item="f">
+                        <div key={f.name} class={f.cellCls}>
+                            <template if:true={f.isText}>
+                                <lightning-input type={f.inputType} label={f.label} value={f.value} required={f.required} disabled={f.disabled}
+                                                 max-length={f.length} field-level-help={f.help} data-name={f.name} onchange={handleChange}></lightning-input>
+                            </template>
+                            <template if:true={f.isNumber}>
+                                <lightning-input type="number" step="any" label={f.label} value={f.value} required={f.required} disabled={f.disabled}
+                                                 field-level-help={f.help} data-name={f.name} onchange={handleChange}></lightning-input>
+                            </template>
+                            <template if:true={f.isTextarea}>
+                                <lightning-textarea label={f.label} value={f.value} required={f.required} disabled={f.disabled}
+                                                    field-level-help={f.help} data-name={f.name} onchange={handleChange}></lightning-textarea>
+                            </template>
+                            <template if:true={f.isPicklist}>
+                                <lightning-combobox label={f.label} value={f.value} options={f.options} required={f.required} disabled={f.disabled}
+                                                    field-level-help={f.help} placeholder="--None--" data-name={f.name} onchange={handleChange}></lightning-combobox>
+                            </template>
+                            <template if:true={f.isBoolean}>
+                                <lightning-input type="checkbox" label={f.label} checked={f.value} disabled={f.disabled}
+                                                 field-level-help={f.help} data-name={f.name} onchange={handleCheckbox}></lightning-input>
+                            </template>
+                            <template if:true={f.isLookup}>
+                                <c-ps-lookup-field label={f.label} reference-to={f.referenceTo} required={f.required} disabled={f.disabled}
+                                                   value={f.value} selected-label={f.lookupLabel} data-name={f.name} onlookupselect={handleLookup}></c-ps-lookup-field>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning-button label="Cancel" onclick={close}></lightning-button>
+                <lightning-button label="Save" variant="brand" class="slds-m-left_x-small" onclick={save} disabled={saving}></lightning-button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

@@ -1,0 +1,7 @@
+.lookup { position: relative; }
+.pill { display: flex; align-items: center; gap: 0.4rem; border: 1px solid #c9c9c9; border-radius: 0.25rem; padding: 0.3rem 0.5rem; background: #f3f6fb; min-height: 2rem; }
+.pill-label { flex: 1; font-size: 0.85rem; }
+.results { position: absolute; z-index: 9100; left: 0; right: 0; background: #fff; border: 1px solid #c9c9c9; border-radius: 0.25rem;
+           box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-height: 220px; overflow-y: auto; list-style: none; }
+.results li { padding: 0.45rem 0.6rem; cursor: pointer; font-size: 0.82rem; }
+.results li:hover { background: #eef4ff; }
