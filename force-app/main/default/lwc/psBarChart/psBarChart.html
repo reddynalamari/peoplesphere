@@ -1,0 +1,16 @@
+<template>
+    <div class="chart">
+        <template if:true={hasData}>
+            <template for:each={bars} for:item="b">
+                <div key={b.key} class="row" title={b.title}>
+                    <span class="label slds-truncate">{b.label}</span>
+                    <span class="track"><span class="fill" style={b.style}></span></span>
+                    <span class="value">{b.display}</span>
+                </div>
+            </template>
+        </template>
+        <template if:false={hasData}>
+            <p class="empty">No data yet</p>
+        </template>
+    </div>
+</template>

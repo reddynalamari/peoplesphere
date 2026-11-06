@@ -1,0 +1,56 @@
+<template>
+    <div class="assistant">
+        <header class="hero">
+            <div class="logo"><lightning-icon icon-name="utility:sparkles" variant="inverse" size="small"></lightning-icon></div>
+            <div>
+                <h1>PeopleSphere HR Assistant</h1>
+                <p class="sub">Ask about your workforce or company policies. I read data you have access to and never make people decisions for you.</p>
+            </div>
+        </header>
+
+        <div class="chat" lwc:ref="chat">
+            <template if:false={hasMessages}>
+                <div class="welcome">
+                    <p class="muted">Try one of these:</p>
+                    <div class="chips">
+                        <template for:each={suggestions} for:item="s">
+                            <button key={s} class="chip" data-q={s} onclick={useSuggestion}>{s}</button>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <template for:each={messages} for:item="m">
+                <div key={m.key} class={m.cls}>
+                    <div class="bubble">
+                        <p class="text">{m.text}</p>
+                        <template if:true={m.isTable}>
+                            <div class="tbl">
+                                <lightning-datatable key-field="key" data={m.rows} columns={m.columns} hide-checkbox-column onrowaction={openRow}></lightning-datatable>
+                            </div>
+                        </template>
+                        <template if:true={m.hasSources}>
+                            <p class="sources">Sources:
+                                <template for:each={m.sources} for:item="src">
+                                    <a key={src.id} data-id={src.id} onclick={openRecord} class="src">{src.name}</a>
+                                </template>
+                            </p>
+                        </template>
+                        <template if:true={m.isBot}>
+                            <div class="meta">
+                                <template if:true={m.usedClaude}><span class="tag">Answered with Claude · grounded in policy</span></template>
+                                <template if:true={m.canEscalate}><lightning-button variant="base" label="Not helpful? Ask a human" data-key={m.key} onclick={escalate}></lightning-button></template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            <template if:true={thinking}><div class="msg bot"><div class="bubble typing"><span></span><span></span><span></span></div></div></template>
+        </div>
+
+        <div class="composer">
+            <lightning-input class="input" label="Ask a question" variant="label-hidden" placeholder="e.g. Which department has the highest attrition?"
+                             value={draft} onchange={handleDraft} onkeyup={handleKey}></lightning-input>
+            <lightning-button variant="brand" label="Ask" icon-name="utility:send" onclick={send} disabled={cannotSend}></lightning-button>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,127 @@
+<template>
+    <div class="mgr">
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner></template>
+        <header class="hero">
+            <div>
+                <p class="eyebrow">Manager Workspace</p>
+                <h1>{heading}</h1>
+                <p class="sub">{subheading}</p>
+            </div>
+            <lightning-button-icon icon-name="utility:refresh" variant="border-inverse" alternative-text="Refresh" onclick={load}></lightning-button-icon>
+        </header>
+
+        <div class="kpis">
+            <c-ps-kpi label="Team size" value={kpis.teamSize} icon="utility:groups" tone="blue"></c-ps-kpi>
+            <c-ps-kpi label="Present today" value={kpis.present} icon="utility:check" tone="green"></c-ps-kpi>
+            <c-ps-kpi label="On leave" value={kpis.onLeave} icon="utility:away" tone="orange"></c-ps-kpi>
+            <c-ps-kpi label="Pending approvals" value={kpis.pendingApprovals} icon="utility:approval" tone="purple"></c-ps-kpi>
+            <c-ps-kpi label="Overdue training" value={kpis.overdueTraining} icon="utility:education" tone="red"></c-ps-kpi>
+            <c-ps-kpi label="Avg rating" value={kpis.avgRating} icon="utility:favorite" tone="teal"></c-ps-kpi>
+        </div>
+
+        <div class="grid">
+            <section class="panel span2">
+                <div class="head"><h2>Team</h2><span class="hint">{teamCount} direct reports</span></div>
+                <template if:true={hasTeam}>
+                    <table class="t">
+                        <thead><tr><th>Employee</th><th>Today</th><th>Compliance</th><th>Rating</th><th>Leave bal.</th><th>Onboarding</th><th></th></tr></thead>
+                        <tbody>
+                            <template for:each={team} for:item="m">
+                                <tr key={m.id}>
+                                    <td><a data-id={m.id} onclick={open}>{m.name}</a><p class="muted">{m.designation}</p></td>
+                                    <td><span class={m.todayCls}>{m.today}</span><template if:true={m.late}> <span class="pill red">Late</span></template></td>
+                                    <td><lightning-progress-bar value={m.compliance} size="small"></lightning-progress-bar><span class="muted">{m.compliance}%<template if:true={m.overdueTraining}> · {m.overdueTraining} overdue</template></span></td>
+                                    <td>{m.ratingLabel}</td>
+                                    <td>{m.leaveBalance}</td>
+                                    <td>{m.onboardingLabel}</td>
+                                    <td><lightning-button-icon icon-name="utility:like" alternative-text="Recognize" size="small" data-id={m.id} onclick={recognize}></lightning-button-icon></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template if:false={hasTeam}><p class="muted">{teamEmptyText}</p></template>
+            </section>
+
+            <section class="panel">
+                <div class="head"><h2>Approvals</h2><span class="hint">{approvalCount}</span></div>
+                <template for:each={leaveApprovals} for:item="l">
+                    <div key={l.Id} class="appr">
+                        <div class="grow">
+                            <strong>{l.employee}</strong> <span class="muted">· {l.Leave_Type__c}</span>
+                            <p class="small">{l.Number_of_Days__c} day(s): <lightning-formatted-date-time value={l.Start_Date__c}></lightning-formatted-date-time> → <lightning-formatted-date-time value={l.End_Date__c}></lightning-formatted-date-time></p>
+                            <template if:true={l.Reason__c}><p class="small muted">"{l.Reason__c}"</p></template>
+                        </div>
+                        <lightning-button-icon icon-name="utility:check" variant="brand" alternative-text="Approve" data-id={l.Id} data-kind="leave" data-approve="true" onclick={decide}></lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:close" alternative-text="Reject" data-id={l.Id} data-kind="leave" data-approve="false" onclick={decide}></lightning-button-icon>
+                    </div>
+                </template>
+                <template for:each={expenseApprovals} for:item="x">
+                    <div key={x.Id} class="appr">
+                        <div class="grow">
+                            <strong>{x.employee}</strong> <span class="muted">· {x.Category__c} expense</span>
+                            <p class="small"><lightning-formatted-number value={x.Amount__c} format-style="currency"></lightning-formatted-number> on <lightning-formatted-date-time value={x.Expense_Date__c}></lightning-formatted-date-time></p>
+                            <template if:true={x.Description__c}><p class="small muted">"{x.Description__c}"</p></template>
+                        </div>
+                        <lightning-button-icon icon-name="utility:check" variant="brand" alternative-text="Approve" data-id={x.Id} data-kind="expense" data-approve="true" onclick={decide}></lightning-button-icon>
+                        <lightning-button-icon icon-name="utility:close" alternative-text="Reject" data-id={x.Id} data-kind="expense" data-approve="false" onclick={decide}></lightning-button-icon>
+                    </div>
+                </template>
+                <template if:false={hasApprovals}><p class="muted">You're all caught up.</p></template>
+            </section>
+        </div>
+
+        <div class="grid">
+            <section class="panel span2">
+                <div class="head"><h2>Performance reviews</h2></div>
+                <template for:each={reviewQueue} for:item="r">
+                    <div key={r.id} class="review">
+                        <div class="grow">
+                            <strong>{r.employee}</strong> <span class="muted">· {r.cycle} · {r.status}</span>
+                            <template if:true={r.overdue}> <span class="pill red">Overdue</span></template>
+                            <template if:true={r.selfRating}><p class="small">Self rating {r.selfRating}: {r.selfAssessment}</p></template>
+                        </div>
+                        <template if:true={r.ready}><lightning-button label="Write review" data-id={r.id} onclick={openReview}></lightning-button></template>
+                        <template if:false={r.ready}><span class="muted small">Waiting for self-assessment</span></template>
+                    </div>
+                </template>
+                <template if:false={hasReviews}><p class="muted">No reviews in progress.</p></template>
+            </section>
+            <section class="panel">
+                <div class="head"><h2>Onboarding tasks for you</h2></div>
+                <ul class="list">
+                    <template for:each={myTasks} for:item="t">
+                        <li key={t.Id}><span class="grow">{t.Name}<span class="muted"> · {t.Employee_Name__c}</span></span>
+                            <lightning-button-icon icon-name="utility:check" size="small" alternative-text="Done" data-id={t.Id} onclick={completeTask}></lightning-button-icon></li>
+                    </template>
+                </ul>
+                <template if:false={hasTasks}><p class="muted">No open tasks.</p></template>
+                <div class="head mt"><h2>Upcoming team leave</h2></div>
+                <ul class="list">
+                    <template for:each={upcomingLeave} for:item="u">
+                        <li key={u.key}><span class="grow">{u.name}</span><span class="muted">{u.Leave_Type__c} · <lightning-formatted-date-time value={u.Start_Date__c} month="short" day="numeric"></lightning-formatted-date-time></span></li>
+                    </template>
+                </ul>
+            </section>
+        </div>
+
+        <template if:true={reviewOpen}>
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header"><h2 class="slds-text-heading_medium">Manager review</h2></header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-slider label="Rating" min="1" max="5" step="0.5" value={reviewForm.rating} onchange={handleRating}></lightning-slider>
+                        <lightning-textarea label="Feedback" value={reviewForm.feedback} onchange={handleFeedback}></lightning-textarea>
+                        <lightning-input type="checkbox" label="Recommend for promotion" checked={reviewForm.promotion} onchange={handlePromotion}></lightning-input>
+                        <lightning-input type="checkbox" label="Finalize now (skip calibration)" checked={reviewForm.complete} onchange={handleComplete}></lightning-input>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={closeReview}></lightning-button>
+                        <lightning-button label="Submit" variant="brand" class="slds-m-left_x-small" onclick={submitReview}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

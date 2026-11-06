@@ -1,0 +1,380 @@
+<template>
+    <div class="portal">
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner></template>
+
+        <header class="hero">
+            <div class="hello">
+                <p class="eyebrow">My Workspace</p>
+                <h1>{greeting}, {firstName}</h1>
+                <template if:true={emp}><p class="sub">{designationName} · {deptName} · {emp.Employee_ID__c}</p></template>
+            </div>
+            <template if:true={linked}>
+                <div class="clock">
+                    <p class="clock-status">{attendanceLabel}</p>
+                    <template if:true={canCheckIn}>
+                        <lightning-combobox class="mode" label="Work mode" variant="label-hidden" value={workMode} options={workModeOptions} onchange={handleWorkMode}></lightning-combobox>
+                        <lightning-button variant="brand-outline" label="Check in" icon-name="utility:clock" onclick={checkIn}></lightning-button>
+                    </template>
+                    <template if:true={canCheckOut}>
+                        <lightning-button variant="brand-outline" label="Check out" icon-name="utility:logout" onclick={checkOut}></lightning-button>
+                    </template>
+                </div>
+            </template>
+        </header>
+
+        <template if:false={linked}>
+            <template if:false={loading}>
+                <div class="panel notice">
+                    <lightning-icon icon-name="utility:info" size="small"></lightning-icon>
+                    <p>Your Salesforce user is not linked to an Employee record yet. Ask HR to set <strong>Salesforce User</strong> on your employee profile. You can still read announcements below.</p>
+                </div>
+            </template>
+        </template>
+
+        <template if:true={linked}>
+            <div class="quick">
+                <div class="q"><span class="qv">{emp.Casual_Leave_Balance__c}</span><span class="ql">Casual leave</span></div>
+                <div class="q"><span class="qv">{emp.Sick_Leave_Balance__c}</span><span class="ql">Sick leave</span></div>
+                <div class="q"><span class="qv">{emp.Earned_Leave_Balance__c}</span><span class="ql">Earned leave</span></div>
+                <div class="q"><span class="qv">{openCourses}</span><span class="ql">Open courses</span></div>
+                <div class="q"><span class="qv">{pendingPolicyCount}</span><span class="ql">Policies to sign</span></div>
+                <div class="q"><span class="qv">{points}</span><span class="ql">Kudos points</span></div>
+            </div>
+        </template>
+
+        <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+            <lightning-tab label="Home" value="home">
+                <div class="grid-2">
+                    <div>
+                        <template if:true={onboarding}>
+                            <section class="panel">
+                                <div class="head"><h2>Your onboarding</h2><span class="hint">{onboardingPercent}% complete</span></div>
+                                <p class="welcome">{onboarding.Welcome_Message__c}</p>
+                                <lightning-progress-bar value={onboardingPercent} size="large"></lightning-progress-bar>
+                                <ul class="list">
+                                    <template for:each={onboardingTasks} for:item="t">
+                                        <li key={t.Id} class={t.cls}>
+                                            <span class="team">{t.Assigned_Team__c}</span>
+                                            <span class="grow">{t.Name}</span>
+                                            <span class="muted">{t.Status__c}</span>
+                                            <template if:true={t.mine}><lightning-button-icon icon-name="utility:check" alternative-text="Mark done" size="small" data-id={t.Id} onclick={completeTask}></lightning-button-icon></template>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </section>
+                        </template>
+
+                        <template if:true={hasMyTasks}>
+                            <section class="panel">
+                                <div class="head"><h2>Tasks assigned to you</h2><span class="hint">{myTaskCount}</span></div>
+                                <ul class="list">
+                                    <template for:each={myTasks} for:item="t">
+                                        <li key={t.Id} class={t.cls}>
+                                            <span class="team">{t.kind}</span>
+                                            <span class="grow">{t.Name}<span class="muted"> · {t.who}</span></span>
+                                            <span class="muted"><lightning-formatted-date-time value={t.Due_Date__c}></lightning-formatted-date-time></span>
+                                            <lightning-button-icon icon-name="utility:check" alternative-text="Mark done" size="small" data-id={t.Id} onclick={completeTask}></lightning-button-icon>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </section>
+                        </template>
+
+                        <template if:true={hasPendingPolicies}>
+                            <section class="panel">
+                                <div class="head"><h2>Policies awaiting your acknowledgement</h2></div>
+                                <template for:each={ws.pendingPolicies} for:item="p">
+                                    <div key={p.Id} class="policy">
+                                        <div class="grow"><strong>{p.Name}</strong> <span class="muted">v{p.Version__c} · {p.Category__c}</span><p class="small">{p.Summary__c}</p></div>
+                                        <lightning-button label="I acknowledge" variant="brand" data-id={p.Id} onclick={acknowledge}></lightning-button>
+                                    </div>
+                                </template>
+                            </section>
+                        </template>
+
+                        <section class="panel">
+                            <div class="head"><h2>Announcements</h2></div>
+                            <template for:each={announcements} for:item="a">
+                                <article key={a.Id} class="ann">
+                                    <span class={a.cls}>{a.Category__c}</span>
+                                    <h3>{a.Name}<template if:true={a.Pinned__c}> <lightning-icon icon-name="utility:pin" size="xx-small"></lightning-icon></template></h3>
+                                    <p class="small pre">{a.Body__c}</p>
+                                </article>
+                            </template>
+                            <template if:false={hasAnnouncements}><p class="muted">No announcements.</p></template>
+                        </section>
+                    </div>
+                    <div>
+                        <template if:true={survey}>
+                            <section class="panel survey">
+                                <div class="head"><h2>Quick pulse</h2><template if:true={survey.Anonymous__c}><span class="hint">Anonymous</span></template></div>
+                                <p class="q-text">{survey.Question__c}</p>
+                                <div class="scale">
+                                    <template for:each={scale} for:item="s">
+                                        <button key={s.value} class={s.cls} data-value={s.value} onclick={pickScore}>{s.value}</button>
+                                    </template>
+                                </div>
+                                <div class="scale-legend"><span>Not likely</span><span>Very likely</span></div>
+                                <lightning-textarea label="Anything to add? (optional)" value={surveyComment} onchange={handleSurveyComment}></lightning-textarea>
+                                <lightning-button label="Submit" variant="brand" onclick={submitSurvey} disabled={noScore}></lightning-button>
+                            </section>
+                        </template>
+
+                        <section class="panel">
+                            <div class="head"><h2>Recognition wall</h2><lightning-button label="Give kudos" variant="base" onclick={showKudos}></lightning-button></div>
+                            <template for:each={ws.recognitionWall} for:item="r">
+                                <div key={r.id} class="kudo">
+                                    <span class="badge">{r.badge}</span>
+                                    <p><strong>{r.to}</strong> <span class="muted">from {r.from}</span></p>
+                                    <p class="small">{r.message}</p>
+                                </div>
+                            </template>
+                        </section>
+
+                        <template if:true={hasHolidays}>
+                            <section class="panel">
+                                <div class="head"><h2>Upcoming holidays</h2></div>
+                                <ul class="list">
+                                    <template for:each={ws.holidays} for:item="h">
+                                        <li key={h.Name}><span class="grow">{h.Name}</span><span class="muted"><lightning-formatted-date-time value={h.Holiday_Date__c} weekday="short" month="short" day="numeric"></lightning-formatted-date-time></span></li>
+                                    </template>
+                                </ul>
+                            </section>
+                        </template>
+                    </div>
+                </div>
+            </lightning-tab>
+
+            <template if:true={linked}>
+                <lightning-tab label="Time off" value="leave">
+                    <div class="grid-2">
+                        <section class="panel">
+                            <div class="head"><h2>Request time off</h2></div>
+                            <lightning-combobox label="Type" value={leave.type} options={leaveTypes} data-field="type" onchange={handleLeave}></lightning-combobox>
+                            <div class="row2">
+                                <lightning-input type="date" label="From" value={leave.start} data-field="start" onchange={handleLeave}></lightning-input>
+                                <lightning-input type="date" label="To" value={leave.end} data-field="end" onchange={handleLeave}></lightning-input>
+                            </div>
+                            <lightning-input type="checkbox" label="Half day" checked={leave.half} data-field="half" onchange={handleLeave}></lightning-input>
+                            <lightning-textarea label="Reason" value={leave.reason} data-field="reason" onchange={handleLeave}></lightning-textarea>
+                            <p class="small muted">Weekends and holidays are excluded automatically. Your manager is notified.</p>
+                            <lightning-button label="Submit request" variant="brand" onclick={applyLeave}></lightning-button>
+                        </section>
+                        <section class="panel">
+                            <div class="head"><h2>My requests</h2></div>
+                            <ul class="list">
+                                <template for:each={myLeaves} for:item="l">
+                                    <li key={l.Id}>
+                                        <span class="grow"><strong>{l.Leave_Type__c}</strong> <span class="muted">{l.Number_of_Days__c} day(s)</span><br/>
+                                            <span class="small"><lightning-formatted-date-time value={l.Start_Date__c}></lightning-formatted-date-time> → <lightning-formatted-date-time value={l.End_Date__c}></lightning-formatted-date-time></span></span>
+                                        <span class={l.cls}>{l.Status__c}</span>
+                                        <template if:true={l.cancellable}><lightning-button-icon icon-name="utility:close" alternative-text="Cancel" size="small" data-id={l.Id} onclick={cancelLeave}></lightning-button-icon></template>
+                                    </li>
+                                </template>
+                            </ul>
+                            <div class="head mt"><h2>Last 14 days</h2></div>
+                            <div class="att">
+                                <template for:each={attendance} for:item="a">
+                                    <span key={a.Attendance_Date__c} class={a.cls} title={a.title}>{a.day}</span>
+                                </template>
+                            </div>
+                        </section>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Learning" value="learning">
+                    <template if:true={quizEnrollmentId}>
+                        <c-ps-quiz enrollment-id={quizEnrollmentId} onclose={closeQuiz}></c-ps-quiz>
+                    </template>
+                    <div class="grid-2">
+                        <section class="panel">
+                            <div class="head"><h2>My courses</h2></div>
+                            <template for:each={enrollments} for:item="e">
+                                <div key={e.Id} class="course">
+                                    <div class="grow">
+                                        <strong>{e.Course__r.Name}</strong>
+                                        <template if:true={e.Course__r.Mandatory__c}> <span class="pill">Mandatory</span></template>
+                                        <p class="small muted">{e.Course__r.Category__c} · {e.Status__c}<template if:true={e.Due_Date__c}> · due <lightning-formatted-date-time value={e.Due_Date__c}></lightning-formatted-date-time></template><template if:true={e.Score__c}> · score {e.Score__c}%</template></p>
+                                        <lightning-progress-bar value={e.progress} size="small"></lightning-progress-bar>
+                                    </div>
+                                    <div class="btns">
+                                        <template if:true={e.Course__r.Content_URL__c}><lightning-button-icon icon-name="utility:play" alternative-text="Open content" data-url={e.Course__r.Content_URL__c} onclick={openContent}></lightning-button-icon></template>
+                                        <template if:true={e.hasQuiz}><lightning-button label="Take quiz" data-id={e.Id} onclick={openQuiz} disabled={e.done}></lightning-button></template>
+                                        <template if:false={e.hasQuiz}><lightning-button label="Mark complete" data-id={e.Id} onclick={markComplete} disabled={e.done}></lightning-button></template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template if:false={hasEnrollments}><p class="muted">No courses assigned.</p></template>
+                        </section>
+                        <div>
+                            <section class="panel">
+                                <div class="head"><h2>Recommended for you</h2><span class="hint">Skill-gap based</span></div>
+                                <template for:each={ws.recommendations} for:item="r">
+                                    <div key={r.courseId} class="course">
+                                        <div class="grow"><strong>{r.name}</strong><p class="small muted">{r.category} · {r.level} · {r.hours} h</p>
+                                            <template for:each={r.reasons} for:item="why"><p key={why} class="small reason">• {why}</p></template>
+                                        </div>
+                                        <lightning-button label="Enroll" data-id={r.courseId} onclick={enroll}></lightning-button>
+                                    </div>
+                                </template>
+                                <template if:false={hasRecommendations}><p class="muted">Add skills to your profile to get recommendations.</p></template>
+                            </section>
+                            <section class="panel">
+                                <div class="head"><h2>Certifications</h2></div>
+                                <ul class="list">
+                                    <template for:each={ws.certifications} for:item="c">
+                                        <li key={c.Id}><span class="grow">{c.Name}</span><span class="muted">{c.Status__c}</span></li>
+                                    </template>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Help desk" value="help">
+                    <div class="grid-2">
+                        <section class="panel">
+                            <div class="head"><h2>Ask HR</h2></div>
+                            <lightning-input label="Subject" value={ticket.subject} data-field="subject" onchange={handleTicket}></lightning-input>
+                            <lightning-textarea label="Describe your question or issue" value={ticket.description} data-field="description" onchange={handleTicket}></lightning-textarea>
+                            <lightning-combobox label="Priority" value={ticket.priority} options={priorityOptions} data-field="priority" onchange={handleTicket}></lightning-combobox>
+                            <p class="small muted">Tickets are categorised and routed automatically. Grievances are kept confidential.</p>
+                            <lightning-button label="Submit ticket" variant="brand" onclick={raiseTicket}></lightning-button>
+                            <template if:true={lastTicket}>
+                                <div class="ai">
+                                    <p><strong>{lastTicket.Name}</strong> created · routed to {lastTicket.category} ({lastTicket.AI_Confidence__c}% confidence) · priority {lastTicket.Priority__c}</p>
+                                    <template if:true={lastTicket.policy}><p class="small">Meanwhile, this policy may help: <strong>{lastTicket.policy}</strong></p></template>
+                                </div>
+                            </template>
+                        </section>
+                        <section class="panel">
+                            <div class="head"><h2>My tickets</h2></div>
+                            <template for:each={tickets} for:item="t">
+                                <div key={t.Id} class="ticket">
+                                    <div class="grow"><strong>{t.Subject__c}</strong><p class="small muted">{t.Name} · {t.Category__c} · {t.Priority__c}</p>
+                                        <template if:true={t.Resolution__c}><p class="small">Resolution: {t.Resolution__c}</p></template></div>
+                                    <span class={t.cls}>{t.Status__c}</span>
+                                    <template if:true={t.rateable}>
+                                        <lightning-combobox class="rate" label="Rate" variant="label-hidden" placeholder="Rate" options={ratingOptions} data-id={t.Id} onchange={rateTicket}></lightning-combobox>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Expenses" value="expenses">
+                    <div class="grid-2">
+                        <section class="panel">
+                            <div class="head"><h2>Submit a claim</h2></div>
+                            <lightning-combobox label="Category" value={expense.category} options={expenseCategories} data-field="category" onchange={handleExpense}></lightning-combobox>
+                            <div class="row2">
+                                <lightning-input type="number" formatter="currency" step="0.01" label="Amount" value={expense.amount} data-field="amount" onchange={handleExpense}></lightning-input>
+                                <lightning-input type="date" label="Expense date" value={expense.date} data-field="date" onchange={handleExpense}></lightning-input>
+                            </div>
+                            <lightning-textarea label="Description" value={expense.description} data-field="description" onchange={handleExpense}></lightning-textarea>
+                            <lightning-button label="Submit claim" variant="brand" onclick={submitExpense}></lightning-button>
+                        </section>
+                        <section class="panel">
+                            <div class="head"><h2>My claims</h2></div>
+                            <ul class="list">
+                                <template for:each={ws.myExpenses} for:item="x">
+                                    <li key={x.Id}><span class="grow">{x.Category__c} <span class="muted">{x.Name}</span></span>
+                                        <lightning-formatted-number value={x.Amount__c} format-style="currency"></lightning-formatted-number>
+                                        <span class="pill">{x.Status__c}</span></li>
+                                </template>
+                            </ul>
+                        </section>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Growth" value="growth">
+                    <div class="grid-2">
+                        <div>
+                            <template if:true={review}>
+                                <section class="panel">
+                                    <div class="head"><h2>Self-assessment · {review.Review_Cycle__c} {review.Review_Year__c}</h2></div>
+                                    <lightning-slider label="Self rating" min="1" max="5" step="0.5" value={selfRating} onchange={handleSelfRating}></lightning-slider>
+                                    <lightning-textarea label="Your achievements and reflections" value={selfText} onchange={handleSelfText}></lightning-textarea>
+                                    <lightning-button label="Submit to manager" variant="brand" onclick={submitSelf}></lightning-button>
+                                </section>
+                            </template>
+                            <section class="panel">
+                                <div class="head"><h2>My goals</h2></div>
+                                <template for:each={goals} for:item="g">
+                                    <div key={g.Id} class="goal">
+                                        <div class="grow"><strong>{g.Name}</strong><p class="small muted">{g.Key_Result__c}</p>
+                                            <lightning-progress-bar value={g.progress} size="small"></lightning-progress-bar></div>
+                                        <lightning-input class="goal-input" type="number" label="Current" variant="label-hidden" value={g.Current_Value__c} data-id={g.Id} onchange={updateGoal}></lightning-input>
+                                        <span class="muted small">/ {g.Target_Value__c} {g.Unit__c}</span>
+                                    </div>
+                                </template>
+                                <template if:false={hasGoals}><p class="muted">No open goals.</p></template>
+                            </section>
+                        </div>
+                        <section class="panel">
+                            <div class="head"><h2>Internal job marketplace</h2></div>
+                            <template for:each={ws.internalJobs} for:item="j">
+                                <div key={j.Id} class="course">
+                                    <div class="grow"><strong>{j.Name}</strong><p class="small muted">{j.Employment_Type__c} · {j.Required_Skills__c}</p></div>
+                                    <lightning-button label="Apply" data-id={j.Id} onclick={applyJob}></lightning-button>
+                                </div>
+                            </template>
+                            <template if:false={hasJobs}><p class="muted">No internal openings right now.</p></template>
+                        </section>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="My profile" value="profile">
+                    <c-ps-employee360></c-ps-employee360>
+                    <section class="panel">
+                        <div class="head"><h2>Assets with me</h2></div>
+                        <ul class="list">
+                            <template for:each={ws.myAssets} for:item="a">
+                                <li key={a.Id}><span class="grow">{a.Name}</span><span class="muted">{a.Asset_Type__c} · {a.Asset_Tag__c}</span></li>
+                            </template>
+                        </ul>
+                    </section>
+                    <section class="panel">
+                        <div class="head"><h2>Resignation</h2></div>
+                        <template if:true={exitProcess}><p>Exit {exitProcess.Name} is <strong>{exitProcess.Status__c}</strong>. Last working day: <lightning-formatted-date-time value={exitProcess.Last_Working_Day__c}></lightning-formatted-date-time></p></template>
+                        <template if:false={exitProcess}>
+                            <lightning-button label="Submit resignation" variant="destructive-text" onclick={toggleResign}></lightning-button>
+                            <template if:true={showResign}>
+                                <div class="resign">
+                                    <lightning-combobox label="Reason" value={resign.reason} options={exitReasons} data-field="reason" onchange={handleResign}></lightning-combobox>
+                                    <lightning-input type="date" label="Requested last working day (optional)" value={resign.lastDay} data-field="lastDay" onchange={handleResign}></lightning-input>
+                                    <lightning-textarea label="Comments" value={resign.comments} data-field="comments" onchange={handleResign}></lightning-textarea>
+                                    <lightning-button label="Confirm resignation" variant="destructive" onclick={submitResignation}></lightning-button>
+                                </div>
+                            </template>
+                        </template>
+                    </section>
+                </lightning-tab>
+            </template>
+        </lightning-tabset>
+
+        <template if:true={kudosOpen}>
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header"><h2 class="slds-text-heading_medium">Give kudos</h2></header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-input type="search" label="Colleague" value={kudosTerm} onchange={searchColleague}></lightning-input>
+                        <ul class="list">
+                            <template for:each={colleagues} for:item="c">
+                                <li key={c.id} class={c.cls} data-id={c.id} onclick={pickColleague}><span class="grow">{c.name}</span><span class="muted">{c.designation}</span></li>
+                            </template>
+                        </ul>
+                        <lightning-combobox label="Badge" value={kudos.badge} options={badgeOptions} onchange={handleBadge}></lightning-combobox>
+                        <lightning-textarea label="Message" value={kudos.message} onchange={handleKudosMessage}></lightning-textarea>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={hideKudos}></lightning-button>
+                        <lightning-button label="Send" variant="brand" class="slds-m-left_x-small" onclick={sendKudos} disabled={noRecipient}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

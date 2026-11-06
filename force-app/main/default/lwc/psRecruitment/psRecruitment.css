@@ -1,0 +1,19 @@
+:host { display: block; }
+.rec { position: relative; }
+.banner { display: flex; gap: 0.6rem; align-items: center; background: #e6f6e6; color: #194e31; border-radius: 0.6rem; padding: 0.7rem 0.9rem; margin-bottom: 0.75rem; font-weight: 600; font-size: 0.85rem; }
+.panel { background: #fff; border: 1px solid #e5e8ee; border-radius: 0.75rem; padding: 0.9rem; margin-bottom: 0.75rem; }
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem; }
+.head h2 { font-size: 1rem; font-weight: 700; }
+.muted { color: #706e6b; font-size: 0.75rem; }
+.board { display: grid; grid-template-columns: repeat(6, minmax(150px, 1fr)); gap: 0.5rem; overflow-x: auto; }
+.col { background: #f4f6f9; border-radius: 0.6rem; padding: 0.5rem; min-height: 80px; }
+.col-h { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #3e3e3c; margin-bottom: 0.4rem; display: flex; justify-content: space-between; }
+.col-h span { background: #fff; border-radius: 1rem; padding: 0 0.45rem; }
+.card { background: #fff; border: 1px solid #e5e8ee; border-radius: 0.5rem; padding: 0.5rem; margin-bottom: 0.4rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.cn { font-weight: 700; font-size: 0.8rem; }
+.cm { font-size: 0.7rem; color: #706e6b; }
+.hired { font-size: 0.7rem; color: #2e844a; font-weight: 700; }
+.btns { display: flex; justify-content: flex-end; gap: 0.25rem; margin-top: 0.35rem; }
+.pill { font-size: 0.62rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 1rem; background: #eef1f6; vertical-align: middle; }
+.pill.green { background: #cdefc4; color: #194e31; } .pill.orange { background: #fde3c4; color: #8c4b02; }
+.pill.blue { background: #d8e6fe; color: #014486; } .pill.grey { background: #e5e5e5; color: #3e3e3c; }

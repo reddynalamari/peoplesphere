@@ -1,0 +1,6 @@
+.row { display: grid; grid-template-columns: minmax(90px, 38%) 1fr 64px; align-items: center; gap: 0.5rem; margin: 0.35rem 0; }
+.label { font-size: 0.8rem; color: #3e3e3c; }
+.track { height: 0.7rem; background: #eef1f6; border-radius: 1rem; overflow: hidden; }
+.fill { display: block; height: 100%; border-radius: 1rem; transition: width 0.6s ease; }
+.value { font-size: 0.8rem; font-weight: 600; text-align: right; color: #181818; }
+.empty { color: #706e6b; font-size: 0.8rem; padding: 0.5rem 0; }

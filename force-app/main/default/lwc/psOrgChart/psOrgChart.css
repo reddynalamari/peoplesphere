@@ -1,0 +1,4 @@
+.body { position: relative; min-height: 120px; }
+.actions { width: 220px; }
+.stats { display: flex; gap: 1.5rem; font-size: 0.8rem; color: #3e3e3c; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.muted { color: #706e6b; font-size: 0.8rem; }

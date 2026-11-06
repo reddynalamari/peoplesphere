@@ -1,0 +1,23 @@
+<template>
+    <div class="ex">
+        <div class="side panel">
+            <p class="side-h">All PeopleSphere data</p>
+            <ul>
+                <template for:each={objects} for:item="o">
+                    <li key={o.value} class={o.cls} data-api={o.value} onclick={pick}><span>{o.label}</span><span class="n">{o.count}</span></li>
+                </template>
+            </ul>
+        </div>
+        <div class="main panel">
+            <div class="top">
+                <h2>{title}</h2>
+                <lightning-input type="search" label="Search by name" variant="label-hidden" placeholder="Search by name" value={term} onchange={search}></lightning-input>
+            </div>
+            <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+            <div class="tbl">
+                <lightning-datatable key-field="Id" data={rows} columns={columns} hide-checkbox-column></lightning-datatable>
+            </div>
+            <p class="muted">Showing up to 200 most recently changed records · read-only view</p>
+        </div>
+    </div>
+</template>

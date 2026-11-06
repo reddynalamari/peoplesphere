@@ -1,0 +1,131 @@
+<template>
+    <div class="wrap">
+        <template if:false={recordId}>
+            <div class="search panel">
+                <lightning-input type="search" label="Find an employee" placeholder="Search by name, employee ID, email or department"
+                                 onchange={handleSearch} value={term} variant="label-hidden"></lightning-input>
+                <template if:true={hasResults}>
+                    <ul class="results">
+                        <template for:each={results} for:item="r">
+                            <li key={r.id} data-id={r.id} onclick={pick}>
+                                <lightning-avatar src={r.photo} initials={r.initials} fallback-icon-name="standard:avatar" size="small" variant="circle"></lightning-avatar>
+                                <span class="r-name">{r.name}</span><span class="r-meta">{r.employeeId} · {r.designation} · {r.department}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+        <template if:true={error}><p class="error">{error}</p></template>
+        <template if:true={notLinked}><p class="empty">Search for an employee to open their 360° profile.</p></template>
+
+        <template if:true={d}>
+            <header class="profile">
+                <lightning-avatar src={emp.photo} initials={initials} fallback-icon-name="standard:avatar" size="large" variant="circle" class="avatar"></lightning-avatar>
+                <div class="who">
+                    <h1>{emp.name} <span class={statusClass}>{emp.status}</span></h1>
+                    <p class="title">{emp.designation} · {emp.department} · {emp.location}</p>
+                    <p class="meta">{emp.employeeId} · {emp.type} · {emp.workMode} · Joined <lightning-formatted-date-time value={emp.joined}></lightning-formatted-date-time> · {tenure} yrs</p>
+                    <template if:true={emp.manager}><p class="meta">Reports to <a data-id={emp.managerId} onclick={openEmployee}>{emp.manager}</a> ({emp.managerTitle})</p></template>
+                </div>
+                <div class="stats">
+                    <div><span class="num">{emp.completeness}%</span><span class="lbl">Profile</span></div>
+                    <div><span class="num">{d.trainingCompliance}%</span><span class="lbl">Compliance</span></div>
+                    <div><span class="num">{rating}</span><span class="lbl">Rating</span></div>
+                    <div><span class="num">{points}</span><span class="lbl">Kudos pts</span></div>
+                </div>
+                <template if:true={showOpen}>
+                    <div class="actions">
+                        <lightning-button-icon icon-name="utility:open" alternative-text="Open record" onclick={openSelf}></lightning-button-icon>
+                    </div>
+                </template>
+            </header>
+
+            <section class="panel">
+                <div class="lifecycle">
+                    <template for:each={lifecycle} for:item="s">
+                        <div key={s.name} class={s.cls}>
+                            <span class="step-dot"><lightning-icon icon-name={s.icon} size="xx-small" variant="inverse"></lightning-icon></span>
+                            <span class="step-name">{s.name}</span>
+                            <span class="step-detail">{s.detail}</span>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <template if:true={hasRisks}>
+                <section class="risks">
+                    <template for:each={risks} for:item="r">
+                        <span key={r.text} class={r.cls}><lightning-icon icon-name={r.icon} size="xx-small"></lightning-icon> {r.text}</span>
+                    </template>
+                </section>
+            </template>
+
+            <lightning-tabset variant="scoped">
+                <lightning-tab label="Timeline">
+                    <ul class="timeline">
+                        <template for:each={timeline} for:item="t">
+                            <li key={t.key} class="tl-item">
+                                <span class="tl-icon"><lightning-icon icon-name={t.icon} size="x-small"></lightning-icon></span>
+                                <div>
+                                    <p class="tl-title">{t.title}</p>
+                                    <p class="tl-detail">{t.detail}</p>
+                                    <p class="tl-when"><lightning-formatted-date-time value={t.when} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></p>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </lightning-tab>
+                <lightning-tab label="Skills & career">
+                    <div class="chips">
+                        <template for:each={skills} for:item="s">
+                            <span key={s.name} class={s.cls}>{s.name}<template if:true={s.gap}> · gap</template></span>
+                        </template>
+                    </div>
+                    <p class="legend-note">Grey chips are skills the current designation requires that are not yet on the profile.</p>
+                    <dl class="kv">
+                        <dt>Career aspiration</dt><dd>{aspiration}</dd>
+                        <dt>Succession readiness</dt><dd>{succession}</dd>
+                        <dt>Critical role</dt><dd>{critical}</dd>
+                        <template if:true={emp.risk}><dt>Attrition risk indicator</dt><dd>{emp.risk}</dd></template>
+                        <template if:true={ctc}><dt>Annual CTC</dt><dd>{ctc}</dd></template>
+                    </dl>
+                    <template if:true={hasReports}>
+                        <h3 class="sub-h">Direct reports ({reportCount})</h3>
+                        <div class="reports">
+                            <template for:each={d.directReports} for:item="r">
+                                <a key={r.id} data-id={r.id} onclick={openEmployee} class="report">{r.name}<span>{r.designation}</span></a>
+                            </template>
+                        </div>
+                    </template>
+                </lightning-tab>
+                <lightning-tab label="Learning">
+                    <lightning-datatable key-field="Id" data={enrollments} columns={enrollmentCols} hide-checkbox-column></lightning-datatable>
+                    <h3 class="sub-h">Certifications</h3>
+                    <lightning-datatable key-field="Id" data={d.certifications} columns={certCols} hide-checkbox-column></lightning-datatable>
+                </lightning-tab>
+                <lightning-tab label="Performance">
+                    <lightning-datatable key-field="Id" data={reviews} columns={reviewCols} hide-checkbox-column></lightning-datatable>
+                    <h3 class="sub-h">Goals</h3>
+                    <lightning-datatable key-field="Id" data={goals} columns={goalCols} hide-checkbox-column></lightning-datatable>
+                </lightning-tab>
+                <lightning-tab label="Documents & assets">
+                    <lightning-datatable key-field="Id" data={d.documents} columns={docCols} hide-checkbox-column></lightning-datatable>
+                    <h3 class="sub-h">Assigned assets</h3>
+                    <lightning-datatable key-field="Id" data={d.assets} columns={assetCols} hide-checkbox-column></lightning-datatable>
+                </lightning-tab>
+                <lightning-tab label="Time off">
+                    <div class="balances">
+                        <div><span class="num">{emp.casual}</span><span class="lbl">Casual</span></div>
+                        <div><span class="num">{emp.sick}</span><span class="lbl">Sick</span></div>
+                        <div><span class="num">{emp.earned}</span><span class="lbl">Earned</span></div>
+                        <div><span class="num">{d.openTickets}</span><span class="lbl">Open HR tickets</span></div>
+                    </div>
+                    <lightning-datatable key-field="Id" data={d.leaves} columns={leaveCols} hide-checkbox-column></lightning-datatable>
+                </lightning-tab>
+            </lightning-tabset>
+        </template>
+    </div>
+</template>

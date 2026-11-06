@@ -1,0 +1,138 @@
+<template>
+    <div class="ps-page">
+        <header class="hero">
+            <div>
+                <p class="eyebrow">PeopleSphere · Workforce Intelligence</p>
+                <h1>Organization overview</h1>
+                <p class="sub">One connected view of hiring, onboarding, learning, performance, service and engagement.</p>
+            </div>
+            <div class="hero-actions">
+                <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={refresh} variant="border-inverse"></lightning-button-icon>
+                <template if:true={canNavigate}><lightning-button label="New employee" icon-name="utility:add" onclick={newEmployee}></lightning-button></template>
+            </div>
+        </header>
+
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner></template>
+        <template if:true={error}><div class="slds-notify slds-notify_alert slds-alert_error" role="alert">{error}</div></template>
+
+        <template if:true={data}>
+            <div class="kpi-grid">
+                <c-ps-kpi label="Active headcount" value={kpis.activeHeadcount} caption={preboardingCaption} icon="utility:people" tone="blue"></c-ps-kpi>
+                <c-ps-kpi label="New joiners (30d)" value={kpis.joiners30} icon="utility:adduser" tone="green"></c-ps-kpi>
+                <c-ps-kpi label="Attrition (12m)" value={kpis.attritionRate} suffix="%" caption={exitsCaption} icon="utility:logout" tone="red"></c-ps-kpi>
+                <c-ps-kpi label="Training compliance" value={kpis.trainingCompliance} suffix="%" caption={overdueTrainingCaption} icon="utility:education" tone="purple"></c-ps-kpi>
+                <c-ps-kpi label="Open HR tickets" value={kpis.openTickets} caption={slaCaption} icon="utility:service_contract" tone="orange"></c-ps-kpi>
+                <c-ps-kpi label="eNPS" value={kpis.enps} caption={enpsCaption} icon="utility:like" tone="teal"></c-ps-kpi>
+                <c-ps-kpi label="Open onboarding" value={kpis.openOnboarding} caption={onboardingCaption} icon="utility:flow" tone="blue"></c-ps-kpi>
+                <c-ps-kpi label="Open positions" value={kpis.openPositions} caption={reqCaption} icon="utility:work_order_type" tone="green"></c-ps-kpi>
+            </div>
+
+            <div class="grid-3">
+                <section class="panel span-2">
+                    <div class="panel-head"><h2>Joiners vs exits</h2><span class="hint">Last 6 months</span></div>
+                    <div class="trend">
+                        <template for:each={trend} for:item="m">
+                            <div key={m.label} class="trend-col">
+                                <div class="trend-bars">
+                                    <span class="bar join" style={m.joinStyle} title={m.joinTitle}></span>
+                                    <span class="bar exit" style={m.exitStyle} title={m.exitTitle}></span>
+                                </div>
+                                <span class="trend-label">{m.label}</span>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="legend"><span class="dot join"></span>Joiners <span class="dot exit"></span>Exits</div>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>Compliance control center</h2></div>
+                    <template if:true={hasAlerts}>
+                        <ul class="alerts">
+                            <template for:each={alerts} for:item="a">
+                                <li key={a.text} class={a.cls}>
+                                    <lightning-icon icon-name={a.icon} size="x-small" variant={a.variant}></lightning-icon>
+                                    <span><strong>{a.count}</strong> {a.text}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template if:false={hasAlerts}><p class="ok">All clear: nothing needs attention right now.</p></template>
+                </section>
+            </div>
+
+            <div class="grid-3">
+                <section class="panel">
+                    <div class="panel-head"><h2>Headcount by department</h2></div>
+                    <c-ps-bar-chart items={data.headcountByDepartment} multicolor></c-ps-bar-chart>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>Headcount by location</h2></div>
+                    <c-ps-bar-chart items={data.headcountByLocation} color="#0b827c"></c-ps-bar-chart>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>Employment type</h2></div>
+                    <c-ps-bar-chart items={data.headcountByType} color="#7526e3"></c-ps-bar-chart>
+                </section>
+            </div>
+
+            <div class="grid-3">
+                <section class="panel span-2">
+                    <div class="panel-head"><h2>Onboarding pipeline</h2><span class="hint">Avg completion {kpis.avgOnboardingCompletion}%</span></div>
+                    <template if:true={hasOnboarding}>
+                        <table class="ps-table">
+                            <thead><tr><th>New joiner</th><th>Department</th><th>Days</th><th class="w-40">Progress</th></tr></thead>
+                            <tbody>
+                                <template for:each={onboarding} for:item="o">
+                                    <tr key={o.id}>
+                                        <td><a data-id={o.id} onclick={openRecord}>{o.employee}</a><template if:true={o.late}> <span class="pill red">Late</span></template></td>
+                                        <td>{o.department}</td>
+                                        <td>{o.days}</td>
+                                        <td><lightning-progress-bar value={o.percent} size="medium"></lightning-progress-bar><span class="pct">{o.percent}%</span></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+                    <template if:false={hasOnboarding}><p class="empty">No onboarding in progress.</p></template>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>Hiring funnel</h2></div>
+                    <c-ps-bar-chart items={data.pipelineByStage} color="#1b96ff"></c-ps-bar-chart>
+                </section>
+            </div>
+
+            <div class="grid-3">
+                <section class="panel">
+                    <div class="panel-head"><h2>Learning completion</h2></div>
+                    <c-ps-bar-chart items={data.learningByCategory} suffix="%" max="100" color="#2e844a"></c-ps-bar-chart>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>Performance distribution</h2></div>
+                    <c-ps-bar-chart items={data.performanceDistribution} color="#dd7a01"></c-ps-bar-chart>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>HR tickets by category</h2><span class="hint">90 days · CSAT {csat}</span></div>
+                    <c-ps-bar-chart items={data.ticketsByCategory} multicolor></c-ps-bar-chart>
+                </section>
+            </div>
+
+            <div class="grid-3">
+                <section class="panel">
+                    <div class="panel-head"><h2>Attrition risk indicators</h2></div>
+                    <c-ps-bar-chart items={data.attritionRisk} color="#ba0517"></c-ps-bar-chart>
+                    <p class="note">Transparent heuristics (rating, pay revisions, recognition, manager changes, overdue training). A prompt for a conversation, not a prediction.</p>
+                </section>
+                <section class="panel">
+                    <div class="panel-head"><h2>Exit reasons</h2><span class="hint">12 months</span></div>
+                    <c-ps-bar-chart items={data.exitReasons} color="#5c5c5c"></c-ps-bar-chart>
+                </section>
+                <template if:true={data.costByDepartment}>
+                    <section class="panel">
+                        <div class="panel-head"><h2>Workforce cost</h2><span class="hint">Annual CTC</span></div>
+                        <c-ps-bar-chart items={data.costByDepartment} currency color="#0b5cab"></c-ps-bar-chart>
+                    </section>
+                </template>
+            </div>
+            <p class="stamp">Updated <lightning-formatted-date-time value={data.generatedAt} hour="2-digit" minute="2-digit"></lightning-formatted-date-time> · {kpis.onLeaveToday} on leave today · {kpis.pendingLeave} leave requests pending</p>
+        </template>
+    </div>
+</template>

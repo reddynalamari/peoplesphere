@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Onboarding orchestrator" icon-name="standard:flow">
+        <lightning-button-icon slot="actions" icon-name="utility:refresh" alternative-text="Refresh" onclick={load}></lightning-button-icon>
+        <div class="slds-p-horizontal_medium body">
+            <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+            <template if:true={empty}><p class="muted">No onboarding has been started for this employee.</p></template>
+            <template if:true={onb}>
+                <div class="top">
+                    <div class="ring" style={ringStyle}><span>{percent}%</span></div>
+                    <div class="facts">
+                        <p class="name">{onb.Employee__r.Name}</p>
+                        <p class="muted">{onb.Name} · {onb.Status__c} · Template: {templateName}</p>
+                        <p class="muted">Started <lightning-formatted-date-time value={onb.Start_Date__c}></lightning-formatted-date-time> · target <lightning-formatted-date-time value={onb.Target_Completion_Date__c}></lightning-formatted-date-time> · day {onb.Days_Elapsed__c}</p>
+                        <p class="muted">{onb.Completed_Tasks__c} of {onb.Total_Tasks__c} tasks complete</p>
+                    </div>
+                </div>
+
+                <div class="teams">
+                    <template for:each={teams} for:item="t">
+                        <div key={t.team} class="team">
+                            <div class="team-head"><strong>{t.team}</strong><span class="muted">{t.done}/{t.total}</span></div>
+                            <lightning-progress-bar value={t.percent} size="small"></lightning-progress-bar>
+                            <ul>
+                                <template for:each={t.rows} for:item="task">
+                                    <li key={task.Id} class={task.cls}>
+                                        <lightning-input type="checkbox" label={task.Name} variant="label-hidden" checked={task.done} data-id={task.Id} onchange={toggle}></lightning-input>
+                                        <span class="grow">{task.Name}<template if:false={task.Mandatory__c}> <span class="muted">(optional)</span></template>
+                                            <span class="muted small"> · {task.owner} · due <lightning-formatted-date-time value={task.Due_Date__c} month="short" day="numeric"></lightning-formatted-date-time></span></span>
+                                        <template if:true={task.Is_Overdue__c}><span class="pill">Overdue</span></template>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
+                </div>
+
+                <h3 class="sub-h">Documents</h3>
+                <ul class="docs">
+                    <template for:each={docs} for:item="d">
+                        <li key={d.Id}>
+                            <span class="grow">{d.Name}</span>
+                            <span class={d.cls}>{d.Verification_Status__c}</span>
+                            <template if:true={d.canVerify}>
+                                <lightning-button-icon icon-name="utility:check" size="small" alternative-text="Verify" data-id={d.Id} data-approve="true" onclick={verify}></lightning-button-icon>
+                                <lightning-button-icon icon-name="utility:close" size="small" alternative-text="Reject" data-id={d.Id} data-approve="false" onclick={verify}></lightning-button-icon>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+        </div>
+    </lightning-card>
+</template>

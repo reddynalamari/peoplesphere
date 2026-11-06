@@ -1,0 +1,12 @@
+{
+  "activeViewId": "7db22973-74ea-4a08-9d54-f4d60788af56",
+  "appPageId": "be37a0e7-b994-40ce-91e7-913d2da12965",
+  "configurationTags": [],
+  "devName": "HR_Admin__c",
+  "id": "6e889a13-fcf5-407a-abc7-d2a5f4e42943",
+  "label": "HR Admin",
+  "pageAccess": "UseParent",
+  "routeType": "custom-hr-admin",
+  "type": "route",
+  "urlPrefix": "hr-admin"
+}

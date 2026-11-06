@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Score__c</fullName>
+    <label>Total Score</label>
+    <summarizedField>Survey_Response__c.Score__c</summarizedField>
+    <summaryForeignKey>Survey_Response__c.Pulse_Survey__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <type>Summary</type>
+</CustomField>

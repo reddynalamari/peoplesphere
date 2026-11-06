@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mandatory__c</fullName>
+    <inlineHelpText>Auto-assigned to every employee in the target department (or everyone if blank).</inlineHelpText>
+    <label>Mandatory</label>
+    <defaultValue>false</defaultValue>
+    <type>Checkbox</type>
+</CustomField>

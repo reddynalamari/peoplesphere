@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Default</label>
+    <protected>true</protected>
+    <values>
+        <field>HR_Password_Hash__c</field>
+        <value xsi:type="xsd:string">240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9</value>
+    </values>
+</CustomMetadata>

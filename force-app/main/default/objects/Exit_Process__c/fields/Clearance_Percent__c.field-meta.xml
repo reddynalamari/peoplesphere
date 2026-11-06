@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Clearance_Percent__c</fullName>
+    <label>Clearance %</label>
+    <formula>IF(Total_Clearance_Tasks__c = 0, 0, Completed_Clearance_Tasks__c / Total_Clearance_Tasks__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <precision>18</precision>
+    <scale>0</scale>
+    <type>Percent</type>
+</CustomField>

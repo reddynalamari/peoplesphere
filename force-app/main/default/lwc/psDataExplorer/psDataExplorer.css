@@ -1,0 +1,15 @@
+:host { display: block; }
+.ex { display: grid; grid-template-columns: 240px 1fr; gap: 0.75rem; }
+@media (max-width: 900px) { .ex { grid-template-columns: 1fr; } }
+.panel { background: #fff; border: 1px solid #e5e8ee; border-radius: 0.75rem; padding: 0.75rem; position: relative; }
+.side { max-height: 720px; overflow-y: auto; }
+.side-h { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #706e6b; margin-bottom: 0.4rem; }
+.side ul { list-style: none; }
+.side li { display: flex; justify-content: space-between; padding: 0.35rem 0.5rem; border-radius: 0.4rem; cursor: pointer; font-size: 0.8rem; }
+.side li:hover { background: #f3f6fb; }
+.side li.sel { background: #0b5cab; color: #fff; }
+.n { font-size: 0.7rem; opacity: 0.8; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.top h2 { font-size: 1rem; font-weight: 700; }
+.tbl { height: 600px; }
+.muted { color: #706e6b; font-size: 0.72rem; margin-top: 0.4rem; }

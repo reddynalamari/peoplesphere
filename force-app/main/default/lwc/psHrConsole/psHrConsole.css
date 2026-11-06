@@ -1,0 +1,32 @@
+:host { display: block; }
+.console { max-width: 1400px; margin: 0 auto; padding: 1rem; background: #f4f6f9; min-height: 100vh; }
+.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+.brand { display: flex; gap: 0.75rem; align-items: center; }
+.logo { width: 2.75rem; height: 2.75rem; border-radius: 0.8rem; background: linear-gradient(135deg, #032d60, #ba01ff); color: #fff; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; }
+.name { font-size: 1.3rem; font-weight: 800; color: #032d60; }
+.tag { font-size: 0.8rem; color: #5c5c5c; }
+.badge { background: #fddde3; color: #8e030f; font-weight: 700; font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 1rem; }
+.intro { background: #fff; border: 1px solid #e5e8ee; border-left: 4px solid #7526e3; border-radius: 0.6rem; padding: 0.75rem 1rem; margin-bottom: 0.75rem; font-size: 0.85rem; }
+.onb { display: grid; grid-template-columns: 300px 1fr; gap: 0.75rem; padding-top: 0.5rem; }
+@media (max-width: 900px) { .onb { grid-template-columns: 1fr; } }
+.panel { background: #fff; border: 1px solid #e5e8ee; border-radius: 0.75rem; padding: 0.75rem; }
+.list { max-height: 720px; overflow-y: auto; }
+.side-h { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; color: #706e6b; margin-bottom: 0.4rem; }
+.item { padding: 0.55rem; border-radius: 0.5rem; cursor: pointer; border: 1px solid transparent; margin-bottom: 0.3rem; }
+.item:hover { background: #f3f6fb; }
+.item.sel { border-color: #7526e3; background: #f6efff; }
+.on { font-weight: 700; font-size: 0.82rem; }
+.om { font-size: 0.72rem; color: #706e6b; margin-bottom: 0.25rem; }
+.late { color: #ba0517; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
+.muted { color: #706e6b; font-size: 0.85rem; }
+.foot { text-align: center; font-size: 0.72rem; color: #706e6b; padding: 1.5rem 0 0.5rem; }
+.right { display: flex; gap: 0.5rem; align-items: center; }
+.lock { display: flex; justify-content: center; align-items: center; min-height: 60vh; position: relative; }
+.lock-card { background: #fff; border: 1px solid #e5e8ee; border-radius: 1rem; padding: 2rem; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 8px 24px rgba(3, 45, 96, 0.12); }
+.lock-icon { width: 3.5rem; height: 3.5rem; border-radius: 1rem; background: linear-gradient(135deg, #032d60, #ba01ff); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; }
+.lock-card h2 { font-size: 1.25rem; font-weight: 800; color: #032d60; margin-bottom: 0.35rem; }
+.lock-card lightning-input { text-align: left; margin: 1rem 0 0.5rem; display: block; }
+.unlock { display: block; margin: 0.75rem 0; }
+.err { color: #ba0517; font-size: 0.8rem; font-weight: 600; }
+.small { font-size: 0.72rem; margin-top: 0.75rem; }

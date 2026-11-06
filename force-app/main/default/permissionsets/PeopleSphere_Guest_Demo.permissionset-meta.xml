@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Assign ONLY to the PeopleSphere site guest user. Grants the public employee demo gateway and the password-protected HR Admin demo gateway, nothing else.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>PeopleSphere Guest Demo</label>
+    <classAccesses>
+        <apexClass>PS_GuestGateway</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>PS_GuestHrGateway</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+</PermissionSet>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Average_Score__c</fullName>
+    <label>Average Score</label>
+    <formula>IF(Response_Count__c = 0, 0, Total_Score__c / Response_Count__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <precision>18</precision>
+    <scale>1</scale>
+    <type>Number</type>
+</CustomField>

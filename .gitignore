@@ -1,0 +1,4 @@
+.sf/
+.sfdx/
+node_modules/
+__pycache__/

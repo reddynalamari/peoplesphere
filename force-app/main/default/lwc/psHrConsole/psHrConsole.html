@@ -1,0 +1,91 @@
+<template>
+    <div class="console">
+        <header class="top">
+            <div class="brand">
+                <span class="logo">PS</span>
+                <div>
+                    <p class="name">PeopleSphere · HR Admin Console</p>
+                    <p class="tag">Every HR feature in one place · built on Salesforce</p>
+                </div>
+            </div>
+            <div class="right">
+                <span class="badge">Live demo · fictional data</span>
+                <template if:true={unlocked}><template if:true={canLogOut}>
+                    <lightning-button label="Lock" icon-name="utility:lock" onclick={logOut}></lightning-button>
+                </template></template>
+            </div>
+        </header>
+
+        <template if:true={checking}><div class="lock"><lightning-spinner alternative-text="Checking" size="small"></lightning-spinner></div></template>
+
+        <template if:true={showLock}>
+            <div class="lock">
+                <div class="lock-card">
+                    <span class="lock-icon"><lightning-icon icon-name="utility:lock" variant="inverse" size="medium"></lightning-icon></span>
+                    <h2>HR Admin access</h2>
+                    <p class="muted">This console has HR-level access to the demo data. Enter the password to continue.</p>
+                    <lightning-input type="password" label="Password" value={password} onchange={handlePassword} onkeyup={handleKey}></lightning-input>
+                    <template if:true={error}><p class="err">{error}</p></template>
+                    <lightning-button class="unlock" variant="brand" label="Unlock" onclick={submit}></lightning-button>
+                    <p class="muted small">Employee demo (no password): <a href={employeeLink}>open the employee workspace</a></p>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={unlocked}>
+        <div class="intro">
+            You are acting as the <strong>HR team</strong> of the fictional company <em>Nimbus Technologies</em>. Approve leave, verify documents,
+            resolve tickets, hire candidates (watch onboarding start automatically), review performance and explore every record.
+            All people and data are fictional. Please do not enter real personal information.
+        </div>
+
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="Dashboard" icon-name="utility:chart">
+                <c-ps-dashboard></c-ps-dashboard>
+            </lightning-tab>
+            <lightning-tab label="Employees" icon-name="utility:people">
+                <c-ps-employee360 hr-mode></c-ps-employee360>
+            </lightning-tab>
+            <lightning-tab label="Onboarding" icon-name="utility:flow" onactive={loadOnboardings}>
+                <div class="onb">
+                    <div class="panel list">
+                        <p class="side-h">Onboarding processes</p>
+                        <template for:each={onboardingRows} for:item="o">
+                            <div key={o.id} class={o.cls} data-id={o.id} onclick={pickOnboarding}>
+                                <p class="on">{o.employee}<template if:true={o.late}> <span class="late">late</span></template></p>
+                                <p class="om">{o.designation} · {o.department} · {o.status}</p>
+                                <lightning-progress-bar value={o.percent} size="small"></lightning-progress-bar>
+                            </div>
+                        </template>
+                    </div>
+                    <div>
+                        <template if:true={selectedOnboarding}>
+                            <c-ps-onboarding-tracker record-id={selectedOnboarding}></c-ps-onboarding-tracker>
+                        </template>
+                        <template if:false={selectedOnboarding}><div class="panel muted">Select an onboarding to manage tasks and verify documents.</div></template>
+                    </div>
+                </div>
+            </lightning-tab>
+            <lightning-tab label="Approvals & reviews" icon-name="utility:approval">
+                <c-ps-manager-workspace hr-mode></c-ps-manager-workspace>
+            </lightning-tab>
+            <lightning-tab label="Service desk" icon-name="utility:service_contract">
+                <c-ps-service-desk></c-ps-service-desk>
+            </lightning-tab>
+            <lightning-tab label="Recruitment" icon-name="utility:work_order_type">
+                <c-ps-recruitment></c-ps-recruitment>
+            </lightning-tab>
+            <lightning-tab label="HR Assistant" icon-name="utility:sparkles">
+                <c-ps-hr-assistant hr-mode></c-ps-hr-assistant>
+            </lightning-tab>
+            <lightning-tab label="Org chart" icon-name="utility:hierarchy">
+                <c-ps-org-chart></c-ps-org-chart>
+            </lightning-tab>
+            <lightning-tab label="Data explorer" icon-name="utility:database">
+                <c-ps-data-explorer></c-ps-data-explorer>
+            </lightning-tab>
+        </lightning-tabset>
+        </template>
+        <footer class="foot">PeopleSphere HR Admin demo · Changes made here are visible to everyone using the demo · Employee view: <a href={employeeLink}>open the employee workspace</a></footer>
+    </div>
+</template>

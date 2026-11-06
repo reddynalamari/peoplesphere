@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SLA_Breached__c</fullName>
+    <label>SLA Breached</label>
+    <formula>AND(NOT(ISBLANK(SLA_Due__c)), OR(AND(ISBLANK(Resolved_On__c), SLA_Due__c &lt; NOW()), AND(NOT(ISBLANK(Resolved_On__c)), Resolved_On__c &gt; SLA_Due__c)))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <type>Checkbox</type>
+</CustomField>

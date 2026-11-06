@@ -1,0 +1,12 @@
+.tile { display: flex; gap: 0.75rem; align-items: center; background: #fff; border-radius: 0.75rem; padding: 0.85rem 1rem;
+        box-shadow: 0 1px 3px rgba(24, 24, 24, 0.08); border: 1px solid #e5e8ee; height: 100%; }
+.icon { width: 2.4rem; height: 2.4rem; border-radius: 0.6rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.value { font-size: 1.45rem; font-weight: 700; line-height: 1.1; color: #181818; }
+.label { font-size: 0.75rem; color: #5c5c5c; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0.15rem; }
+.caption { font-size: 0.72rem; color: #706e6b; margin-top: 0.15rem; }
+.tone-blue .icon { background: #0b5cab; }
+.tone-green .icon { background: #2e844a; }
+.tone-orange .icon { background: #dd7a01; }
+.tone-red .icon { background: #ba0517; }
+.tone-purple .icon { background: #7526e3; }
+.tone-teal .icon { background: #0b827c; }

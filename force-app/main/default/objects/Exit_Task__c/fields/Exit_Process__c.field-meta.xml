@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exit_Process__c</fullName>
+    <label>Exit Process</label>
+    <referenceTo>Exit_Process__c</referenceTo>
+    <relationshipLabel>Clearance Tasks</relationshipLabel>
+    <relationshipName>Clearance_Tasks</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

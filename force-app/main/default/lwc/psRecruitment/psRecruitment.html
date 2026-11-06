@@ -1,0 +1,43 @@
+<template>
+    <div class="rec">
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+        <template if:true={hiredBanner}>
+            <div class="banner">
+                <lightning-icon icon-name="utility:success" size="small" variant="success"></lightning-icon>
+                <span>{hiredBanner}</span>
+            </div>
+        </template>
+        <template for:each={reqs} for:item="r">
+            <section key={r.id} class="panel">
+                <div class="head">
+                    <div>
+                        <h2>{r.name} <span class={r.statusCls}>{r.status}</span><template if:true={r.internal}> <span class="pill blue">Internal</span></template></h2>
+                        <p class="muted">{r.department} · {r.location} · Hiring manager {r.manager} · {r.filledLabel} · {r.daysOpen} days open · skills: {r.skills}</p>
+                    </div>
+                    <template if:true={r.pending}><lightning-button label="Approve & open" variant="brand" data-id={r.id} onclick={approve}></lightning-button></template>
+                </div>
+                <div class="board">
+                    <template for:each={r.columns} for:item="col">
+                        <div key={col.stage} class="col">
+                            <p class="col-h">{col.stage} <span>{col.count}</span></p>
+                            <template for:each={col.cards} for:item="c">
+                                <div key={c.Id} class="card">
+                                    <p class="cn">{c.Name}</p>
+                                    <p class="cm">{c.meta}</p>
+                                    <template if:true={c.hiredAs}><p class="hired">Employee: {c.hiredAs}</p></template>
+                                    <template if:false={c.isHired}>
+                                        <div class="btns">
+                                            <lightning-button-icon icon-name="utility:close" size="x-small" alternative-text="Reject" data-id={c.Id} data-stage="Rejected" onclick={move}></lightning-button-icon>
+                                            <lightning-button label={c.nextLabel} size="small" variant="brand-outline" data-id={c.Id} data-stage={c.next} onclick={move}></lightning-button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </section>
+        </template>
+        <template if:false={hasReqs}><p class="muted">No requisitions yet.</p></template>
+    </div>
+</template>

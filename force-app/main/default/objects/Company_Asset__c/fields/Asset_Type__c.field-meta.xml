@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Asset_Type__c</fullName>
+    <label>Asset Type</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet><restricted>true</restricted><valueSetDefinition><sorted>false</sorted><value><fullName>Laptop</fullName><default>true</default><label>Laptop</label></value><value><fullName>Desktop</fullName><default>false</default><label>Desktop</label></value><value><fullName>Monitor</fullName><default>false</default><label>Monitor</label></value><value><fullName>Mobile Phone</fullName><default>false</default><label>Mobile Phone</label></value><value><fullName>Access Card</fullName><default>false</default><label>Access Card</label></value><value><fullName>Headset</fullName><default>false</default><label>Headset</label></value><value><fullName>Software License</fullName><default>false</default><label>Software License</label></value><value><fullName>Vehicle</fullName><default>false</default><label>Vehicle</label></value><value><fullName>Other</fullName><default>false</default><label>Other</label></value></valueSetDefinition></valueSet>
+</CustomField>

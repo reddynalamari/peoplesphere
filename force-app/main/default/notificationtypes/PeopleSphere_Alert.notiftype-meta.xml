@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotificationType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>PeopleSphere Alert</customNotifTypeName>
+    <description>Approvals, task assignments, SLA escalations and expiry reminders from PeopleSphere.</description>
+    <desktop>true</desktop>
+    <masterLabel>PeopleSphere Alert</masterLabel>
+    <mobile>true</mobile>
+</CustomNotificationType>

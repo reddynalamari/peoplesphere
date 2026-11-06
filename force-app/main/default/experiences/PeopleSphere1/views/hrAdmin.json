@@ -1,0 +1,55 @@
+{
+  "appPageId": "be37a0e7-b994-40ce-91e7-913d2da12965",
+  "componentName": "siteforce:sldsOneColLayout",
+  "dataProviders": [],
+  "id": "7db22973-74ea-4a08-9d54-f4d60788af56",
+  "label": "HR Admin",
+  "regions": [
+    {
+      "id": "d4b2fbd6-66a4-40f9-abca-073108dd0c5a",
+      "regionName": "header",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {},
+          "componentName": "c:psHrConsole",
+          "id": "51d6f353-419a-425a-aa59-a45f8528dd7c",
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "6b8da6a9-5aab-4e4a-a867-e450bcd2b5bd",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "id": "303bac96-4b0b-408e-9b6e-a5011f990c74",
+      "regionName": "footer",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "PeopleSphere HR Admin Console demo",
+            "title": "PeopleSphere HR Admin"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "dfb2c65f-0d9b-4000-a498-4407802e66f6",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "0b6b86f6-0f67-4f51-9495-674bfd4372ea",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-hr-admin"
+}

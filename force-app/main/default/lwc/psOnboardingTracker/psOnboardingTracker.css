@@ -1,0 +1,21 @@
+.body { position: relative; min-height: 80px; }
+.top { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; }
+.ring { width: 84px; height: 84px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ring span { width: 66px; height: 66px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; }
+.name { font-size: 1.05rem; font-weight: 700; }
+.muted { color: #706e6b; font-size: 0.76rem; }
+.small { font-size: 0.72rem; }
+.teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; }
+.team { border: 1px solid #e5e8ee; border-radius: 0.6rem; padding: 0.7rem; }
+.team-head { display: flex; justify-content: space-between; margin-bottom: 0.35rem; }
+.team ul, .docs { list-style: none; margin-top: 0.5rem; }
+.task, .docs li { display: flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0; font-size: 0.8rem; border-bottom: 1px solid #f6f6f6; }
+.task.done .grow { text-decoration: line-through; color: #706e6b; }
+.task.late { background: #fff5f5; }
+.grow { flex: 1; min-width: 0; }
+.pill { font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 1rem; background: #fddde3; color: #8e030f; }
+.docs .pill { background: #eef1f6; color: #3e3e3c; }
+.docs .pill.green { background: #cdefc4; color: #194e31; }
+.docs .pill.red { background: #fddde3; color: #8e030f; }
+.docs .pill.blue { background: #d8e6fe; color: #014486; }
+.sub-h { font-weight: 700; font-size: 0.85rem; margin: 1rem 0 0.25rem; }

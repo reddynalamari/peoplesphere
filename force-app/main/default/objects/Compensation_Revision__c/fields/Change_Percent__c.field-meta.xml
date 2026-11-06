@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Change_Percent__c</fullName>
+    <label>Change %</label>
+    <formula>IF(OR(ISBLANK(Previous_CTC__c), Previous_CTC__c = 0), 0, (New_CTC__c - Previous_CTC__c) / Previous_CTC__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <precision>18</precision>
+    <scale>1</scale>
+    <type>Percent</type>
+</CustomField>

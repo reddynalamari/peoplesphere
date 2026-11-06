@@ -1,0 +1,55 @@
+{
+  "appPageId": "be37a0e7-b994-40ce-91e7-913d2da12965",
+  "componentName": "siteforce:sldsOneColLayout",
+  "dataProviders": [],
+  "id": "086beb62-33fc-4409-bf58-fce9969384e8",
+  "label": "Home",
+  "regions": [
+    {
+      "id": "3d2600b4-6d5d-457a-8c94-4d7f9c2ee006",
+      "regionName": "header",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {},
+          "componentName": "c:psPublicDemo",
+          "id": "97366a8d-922b-45ad-8552-b592e1831af6",
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "e659037d-fe9a-41c5-9675-36fd4cf5d0a5",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "id": "d1a07498-7b35-496a-9da4-b54ec3c472b0",
+      "regionName": "footer",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "Live demo of PeopleSphere, an enterprise employee lifecycle platform built on Salesforce.",
+            "title": "PeopleSphere - Employee Lifecycle Platform Demo"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "03efe90b-df70-4173-857a-7ec3c1143d64",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "89dc16bd-7a9a-4570-a0b5-4a6fe2a7904e",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "home"
+}

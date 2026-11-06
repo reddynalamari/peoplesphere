@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Document_Type__c</fullName>
+    <label>Document Type</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet><restricted>true</restricted><valueSetDefinition><sorted>false</sorted><value><fullName>Offer Letter</fullName><default>false</default><label>Offer Letter</label></value><value><fullName>Aadhaar Card</fullName><default>false</default><label>Aadhaar Card</label></value><value><fullName>PAN Card</fullName><default>false</default><label>PAN Card</label></value><value><fullName>Passport</fullName><default>false</default><label>Passport</label></value><value><fullName>Degree Certificate</fullName><default>false</default><label>Degree Certificate</label></value><value><fullName>Experience Letter</fullName><default>false</default><label>Experience Letter</label></value><value><fullName>Relieving Letter</fullName><default>false</default><label>Relieving Letter</label></value><value><fullName>Bank Proof</fullName><default>false</default><label>Bank Proof</label></value><value><fullName>Address Proof</fullName><default>false</default><label>Address Proof</label></value><value><fullName>Photograph</fullName><default>false</default><label>Photograph</label></value><value><fullName>Visa / Work Permit</fullName><default>false</default><label>Visa / Work Permit</label></value><value><fullName>Signed Policy</fullName><default>false</default><label>Signed Policy</label></value><value><fullName>Other</fullName><default>false</default><label>Other</label></value></valueSetDefinition></valueSet>
+</CustomField>

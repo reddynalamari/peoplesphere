@@ -1,0 +1,29 @@
+:host { display: block; }
+.mgr { position: relative; }
+.hero { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(120deg, #3a0f8c, #7526e3); color: #fff;
+        border-radius: 1rem; padding: 1.4rem 1.75rem; margin-bottom: 0.75rem; }
+.eyebrow { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.7rem; opacity: 0.8; }
+.hero h1 { font-size: 1.55rem; font-weight: 700; }
+.sub { opacity: 0.9; font-size: 0.85rem; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.6rem; margin-bottom: 0.75rem; }
+.grid { display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+@media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+.panel { background: #fff; border: 1px solid #e5e8ee; border-radius: 0.75rem; padding: 1rem 1.1rem; }
+.head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
+.head.mt { margin-top: 1rem; }
+.head h2 { font-size: 0.95rem; font-weight: 700; }
+.hint, .muted { color: #706e6b; font-size: 0.74rem; }
+.small { font-size: 0.78rem; }
+.t { width: 100%; font-size: 0.8rem; border-collapse: collapse; }
+.t th { text-align: left; color: #706e6b; font-weight: 600; padding: 0.35rem; border-bottom: 1px solid #e5e8ee; }
+.t td { padding: 0.5rem 0.35rem; border-bottom: 1px solid #f3f3f3; vertical-align: middle; }
+.t a { font-weight: 600; cursor: pointer; }
+.pill { font-size: 0.68rem; font-weight: 700; padding: 0.12rem 0.5rem; border-radius: 1rem; background: #eef1f6; white-space: nowrap; }
+.pill.green { background: #cdefc4; color: #194e31; }
+.pill.blue { background: #d8e6fe; color: #014486; }
+.pill.orange { background: #fde3c4; color: #8c4b02; }
+.pill.red { background: #fddde3; color: #8e030f; }
+.appr, .review { display: flex; gap: 0.5rem; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f3f3f3; }
+.grow { flex: 1; min-width: 0; }
+.list { list-style: none; }
+.list li { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid #f3f3f3; font-size: 0.8rem; }

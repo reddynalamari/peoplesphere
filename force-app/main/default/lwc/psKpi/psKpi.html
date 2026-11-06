@@ -1,0 +1,10 @@
+<template>
+    <div class={tileClass}>
+        <div class="icon"><lightning-icon icon-name={icon} size="small" variant="inverse"></lightning-icon></div>
+        <div class="body">
+            <div class="value">{displayValue}</div>
+            <div class="label">{label}</div>
+            <template if:true={caption}><div class="caption">{caption}</div></template>
+        </div>
+    </div>
+</template>

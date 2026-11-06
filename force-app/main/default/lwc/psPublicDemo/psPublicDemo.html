@@ -1,0 +1,47 @@
+<template>
+    <div class="demo">
+        <header class="top">
+            <div class="brand">
+                <span class="logo">PS</span>
+                <div>
+                    <p class="name">PeopleSphere</p>
+                    <p class="tag">Enterprise Employee Lifecycle Platform · built on Salesforce</p>
+                </div>
+            </div>
+            <span class="badge">Live demo · sample data</span>
+        </header>
+
+        <div class="intro">
+            <p>You are signed in as <strong>Alex Demo</strong>, a software engineer at the fictional company <em>Nimbus Technologies</em>.
+               Everything you do here (apply for leave, check in, raise an HR ticket, take a course quiz, give kudos, ask the HR Assistant)
+               runs on real Salesforce automation. All people and data are fictional.</p>
+        </div>
+
+        <lightning-tabset variant="scoped">
+            <lightning-tab label="Employee workspace" icon-name="utility:home">
+                <c-ps-employee-portal></c-ps-employee-portal>
+            </lightning-tab>
+            <lightning-tab label="HR Assistant" icon-name="utility:sparkles">
+                <c-ps-hr-assistant></c-ps-hr-assistant>
+            </lightning-tab>
+            <lightning-tab label="Org chart" icon-name="utility:hierarchy">
+                <c-ps-org-chart></c-ps-org-chart>
+            </lightning-tab>
+            <lightning-tab label="About the platform" icon-name="utility:info">
+                <div class="about">
+                    <h2>One connected system for HR, managers, employees, IT, Finance and Learning</h2>
+                    <div class="mods">
+                        <template for:each={modules} for:item="m">
+                            <div key={m.title} class="mod">
+                                <lightning-icon icon-name={m.icon} size="small"></lightning-icon>
+                                <div><p class="mt">{m.title}</p><p class="md">{m.text}</p></div>
+                            </div>
+                        </template>
+                    </div>
+                    <p class="note">The HR analytics dashboard, manager workspace, compensation data and attrition-risk indicators are available to signed-in HR users inside Salesforce and are intentionally not shown on this public demo.</p>
+                </div>
+            </lightning-tab>
+        </lightning-tabset>
+        <footer class="foot">PeopleSphere demo · Data resets are not guaranteed · Please do not enter real personal information.</footer>
+    </div>
+</template>

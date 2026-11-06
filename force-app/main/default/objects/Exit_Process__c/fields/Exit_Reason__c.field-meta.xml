@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Exit_Reason__c</fullName>
+    <label>Exit Reason</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet><restricted>true</restricted><valueSetDefinition><sorted>false</sorted><value><fullName>Better Opportunity</fullName><default>false</default><label>Better Opportunity</label></value><value><fullName>Compensation</fullName><default>false</default><label>Compensation</label></value><value><fullName>Career Growth</fullName><default>false</default><label>Career Growth</label></value><value><fullName>Relocation</fullName><default>false</default><label>Relocation</label></value><value><fullName>Personal</fullName><default>false</default><label>Personal</label></value><value><fullName>Higher Studies</fullName><default>false</default><label>Higher Studies</label></value><value><fullName>Health</fullName><default>false</default><label>Health</label></value><value><fullName>Work-Life Balance</fullName><default>false</default><label>Work-Life Balance</label></value><value><fullName>Management</fullName><default>false</default><label>Management</label></value><value><fullName>Performance</fullName><default>false</default><label>Performance</label></value><value><fullName>Other</fullName><default>false</default><label>Other</label></value></valueSetDefinition></valueSet>
+</CustomField>

@@ -1,0 +1,16 @@
+.body { position: relative; min-height: 160px; }
+.sub { font-size: 0.8rem; color: #706e6b; }
+.desc { font-size: 0.85rem; color: #3e3e3c; margin-bottom: 0.75rem; }
+.q { padding: 0.75rem 0; border-bottom: 1px solid #f3f3f3; }
+.q-title { font-weight: 600; margin-bottom: 0.35rem; }
+.result { text-align: center; padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.75rem; }
+.result.pass { background: #e6f6e6; color: #194e31; }
+.result.fail { background: #fef1ee; color: #8e030f; }
+.score { font-size: 2.2rem; font-weight: 800; }
+.cert { font-weight: 600; margin-top: 0.35rem; }
+.rv { padding: 0.55rem 0.75rem; border-radius: 0.5rem; margin-bottom: 0.4rem; }
+.rv.ok { background: #f3f9f3; }
+.rv.bad { background: #fff5f5; }
+.small { font-size: 0.78rem; }
+.expl { color: #3e3e3c; font-style: italic; }
+.err { color: #ba0517; }

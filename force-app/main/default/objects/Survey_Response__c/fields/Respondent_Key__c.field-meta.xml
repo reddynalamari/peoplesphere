@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Respondent_Key__c</fullName>
+    <inlineHelpText>One-way hash: prevents duplicate answers without revealing who answered.</inlineHelpText>
+    <label>Respondent Key</label>
+    <length>80</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>true</unique>
+    <externalId>true</externalId>
+    <caseSensitive>false</caseSensitive>
+</CustomField>

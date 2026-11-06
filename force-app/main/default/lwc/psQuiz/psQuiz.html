@@ -1,0 +1,49 @@
+<template>
+    <section role="dialog" class="slds-modal slds-fade-in-open slds-modal_medium">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 class="slds-text-heading_medium">{title}</h2>
+                <template if:true={quiz}><p class="slds-m-top_x-small sub">Pass mark {quiz.passingScore}% · Attempts so far {attempts}</p></template>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium body">
+                <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+                <template if:true={error}><p class="err">{error}</p></template>
+
+                <template if:true={showQuestions}>
+                    <template if:true={quiz.description}><p class="desc">{quiz.description}</p></template>
+                    <template for:each={questions} for:item="q">
+                        <div key={q.id} class="q">
+                            <p class="q-title">{q.index}. {q.question}</p>
+                            <lightning-radio-group name={q.id} label={q.question} variant="label-hidden" options={q.options} value={q.answer} data-id={q.id} onchange={answer}></lightning-radio-group>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:true={result}>
+                    <div class={resultClass}>
+                        <p class="score">{result.score}%</p>
+                        <p>{resultText}</p>
+                        <template if:true={result.certificateIssued}><p class="cert">Certificate issued. It is now on your profile.</p></template>
+                    </div>
+                    <template for:each={review} for:item="r">
+                        <div key={r.id} class={r.cls}>
+                            <p class="q-title">{r.question}</p>
+                            <p class="small">Your answer: {r.givenLabel} · Correct: {r.correctOption}</p>
+                            <template if:true={r.explanation}><p class="small expl">{r.explanation}</p></template>
+                        </div>
+                    </template>
+                </template>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning-button label="Close" onclick={close}></lightning-button>
+                <template if:true={showQuestions}>
+                    <lightning-button label="Submit answers" variant="brand" class="slds-m-left_x-small" onclick={submit} disabled={incomplete}></lightning-button>
+                </template>
+                <template if:true={canRetry}>
+                    <lightning-button label="Try again" variant="brand" class="slds-m-left_x-small" onclick={retry}></lightning-button>
+                </template>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title="Organization chart" icon-name="standard:hierarchy">
+        <div slot="actions" class="actions">
+            <lightning-combobox label="Department" variant="label-hidden" placeholder="All departments" value={departmentId} options={departmentOptions} onchange={handleDept}></lightning-combobox>
+        </div>
+        <div class="slds-p-horizontal_medium body">
+            <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+            <div class="stats">
+                <span><strong>{total}</strong> people</span>
+                <span><strong>{managers}</strong> people managers</span>
+                <span><strong>{maxSpan}</strong> widest span of control</span>
+            </div>
+            <template if:true={hasItems}>
+                <lightning-tree items={items} header="Reporting lines" onselect={handleSelect}></lightning-tree>
+            </template>
+            <template if:false={hasItems}><p class="muted">No employees found.</p></template>
+        </div>
+    </lightning-card>
+</template>

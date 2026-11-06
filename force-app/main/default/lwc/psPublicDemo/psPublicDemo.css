@@ -1,0 +1,18 @@
+:host { display: block; }
+.demo { max-width: 1320px; margin: 0 auto; padding: 1rem; background: #f4f6f9; min-height: 100vh; }
+.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+.brand { display: flex; gap: 0.75rem; align-items: center; }
+.logo { width: 2.75rem; height: 2.75rem; border-radius: 0.8rem; background: linear-gradient(135deg, #0b5cab, #7526e3); color: #fff; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; font-size: 1.05rem; }
+.name { font-size: 1.35rem; font-weight: 800; color: #032d60; }
+.tag { font-size: 0.8rem; color: #5c5c5c; }
+.badge { background: #fde3c4; color: #8c4b02; font-weight: 700; font-size: 0.75rem; padding: 0.3rem 0.75rem; border-radius: 1rem; }
+.intro { background: #fff; border: 1px solid #e5e8ee; border-left: 4px solid #0b5cab; border-radius: 0.6rem; padding: 0.75rem 1rem; margin-bottom: 0.75rem; font-size: 0.85rem; }
+.about { background: #fff; border-radius: 0.75rem; padding: 1.25rem; }
+.about h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; }
+.mod { display: flex; gap: 0.6rem; border: 1px solid #e5e8ee; border-radius: 0.6rem; padding: 0.75rem; }
+.mt { font-weight: 700; font-size: 0.88rem; }
+.md { font-size: 0.78rem; color: #5c5c5c; }
+.note { font-size: 0.78rem; color: #706e6b; margin-top: 1rem; }
+.foot { text-align: center; font-size: 0.72rem; color: #706e6b; padding: 1.5rem 0 0.5rem; }

@@ -1,0 +1,43 @@
+<template>
+    <div class="desk">
+        <template if:true={loading}><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></template>
+        <div class="kpis">
+            <c-ps-kpi label="Open tickets" value={counts.open} icon="utility:service_contract" tone="blue"></c-ps-kpi>
+            <c-ps-kpi label="SLA breached" value={counts.breached} icon="utility:error" tone="red"></c-ps-kpi>
+            <c-ps-kpi label="Escalated" value={counts.escalated} icon="utility:warning" tone="orange"></c-ps-kpi>
+            <c-ps-kpi label="Resolved (30d)" value={counts.resolved30} icon="utility:success" tone="green"></c-ps-kpi>
+        </div>
+        <div class="bar">
+            <lightning-radio-group name="view" label="Queue" type="button" variant="label-hidden" options={views} value={view} onchange={changeView}></lightning-radio-group>
+            <lightning-button label="Run SLA escalation" icon-name="utility:priority" onclick={escalate}></lightning-button>
+        </div>
+        <div class="grid">
+            <section class="panel list">
+                <template for:each={tickets} for:item="t">
+                    <div key={t.Id} class={t.cls} data-id={t.Id} onclick={select}>
+                        <div class="row1"><strong>{t.Subject__c}</strong><span class={t.prioCls}>{t.Priority__c}</span></div>
+                        <div class="row2">{t.Name} · {t.employee} · {t.Category__c} · {t.Status__c}</div>
+                        <div class="row2"><template if:true={t.breached}><span class="late">SLA breached</span> · </template>Due <lightning-formatted-date-time value={t.SLA_Due__c} month="short" day="numeric" hour="2-digit" minute="2-digit"></lightning-formatted-date-time></div>
+                    </div>
+                </template>
+                <template if:false={hasTickets}><p class="muted">No tickets in this queue.</p></template>
+            </section>
+            <section class="panel detail">
+                <template if:true={current}>
+                    <h2>{current.Subject__c}</h2>
+                    <p class="muted">{current.Name} · raised by {current.employee} via {current.Channel__c} · assigned to {current.assignee}</p>
+                    <template if:true={current.Confidential__c}><p class="conf">Confidential (grievance)</p></template>
+                    <p class="desc">{current.Description__c}</p>
+                    <p class="ai">AI triage: <strong>{current.AI_Suggested_Category__c}</strong> ({current.AI_Confidence__c}% confidence)<template if:true={current.policy}> · suggested policy: {current.policy}</template></p>
+                    <div class="row">
+                        <lightning-combobox label="Status" value={edit.status} options={statusOptions} data-field="status" onchange={handleEdit}></lightning-combobox>
+                        <lightning-combobox label="Priority" value={edit.priority} options={priorityOptions} data-field="priority" onchange={handleEdit}></lightning-combobox>
+                    </div>
+                    <lightning-textarea label="Resolution / response" value={edit.resolution} data-field="resolution" onchange={handleEdit}></lightning-textarea>
+                    <lightning-button variant="brand" label="Save" onclick={save}></lightning-button>
+                </template>
+                <template if:false={current}><p class="muted">Select a ticket to work on it.</p></template>
+            </section>
+        </div>
+    </div>
+</template>
